@@ -23,7 +23,6 @@ const DEFAULTS = Object.freeze({
   rate: 110,                  // ms per phoneme
   stressDurationFactor: 1.5,
   stressF0Lift: 8,            // Hz
-  stopSilenceMs: 50,
   stopBurstMs: 25,
   defaultTransitionMs: 35,
   sentenceFinalHoldMs: 0,
@@ -151,15 +150,13 @@ export function compile(tokens, opts = {}) {
     const startF0 = t.stressed ? f0 + DEFAULTS.stressF0Lift : f0;
     const endF0 = startF0 + t.pitchDelta;
     if (p.isStop) {
-      const fullStop = DEFAULTS.stopSilenceMs + DEFAULTS.stopBurstMs;
-      const total = Math.min(fullStop, slotMs);
-      const silenceMs = total * (DEFAULTS.stopSilenceMs / fullStop);
-      const burstMs   = total - silenceMs;
+      const burstMs = Math.min(DEFAULTS.stopBurstMs, slotMs * 0.3);
+      const silenceMs = slotMs - burstMs;
       silence(Math.min(20, silenceMs * 0.4));
       timeMs += silenceMs;
       emit(scaled(p, startF0), Math.min(5, burstMs * 0.2));
       timeMs += burstMs;
-      return total;
+      return slotMs;
     } else if (p.glideTo) {
       const onset = slotMs * 0.25, glide = slotMs * 0.50, offset = slotMs * 0.25;
       emit(scaled(p, startF0), Math.min(20, onset));
