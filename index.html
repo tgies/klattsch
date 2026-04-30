@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>klattsch - primitive formant synth</title>
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+  <h1>klattsch</h1>
+  <p class="subtitle">a formant speech synthesizer (parallel-resonator, late-70s tier)</p>
+
+  <button id="start" class="primary">Start audio</button>
+
+  <section id="main" hidden>
+    <fieldset>
+      <legend>phoneme sequence</legend>
+      <textarea id="seq" rows="10" cols="80" autocomplete="off" spellcheck="false" wrap="soft">HH AH L OW</textarea>
+      <div class="row controls-row">
+        <button id="speak">speak</button>
+        <button id="render">render .wav</button>
+        <span id="status" class="status"></span>
+      </div>
+      <details class="syntax">
+        <summary>syntax help</summary>
+        <pre>tokens (whitespace-separated)
+  PHONEME              ARPABET code (AY, IH, AA, S, ...)
+  PHONEME!             stressed (transient: +8 Hz lift, longer duration)
+  PHONEME+N            rising pitch glide of N Hz; new pitch sticks
+  PHONEME-N            falling pitch glide of N Hz; new pitch sticks
+  PHONEME(+N)          transient rise: ornament only, doesn't carry forward
+  PHONEME(-N)          transient fall
+  ( PHONEMES )         syllable group: phonemes share one rate slot
+  ,  ;  .              short / medium / long pause (100/200/300 ms)
+  bN     b=N           absolute base F0 in Hz (also accepts notes:
+                       bC4, bC#5, bDb3, bA-1, etc.)
+  b+N    b-N           relative base F0 (running pitch shifts by N)
+  b                    reset base F0 to the utterance's starting value
+  rN     r=N           absolute per-phoneme rate in ms
+  r+N    r-N           relative rate (positive = slower)
+  r                    reset rate to opts default
+  pN     p=N           insert exact N-ms pause
+  sN     s=N           absolute formant scale (1.0 = male baseline,
+                       1.17 = typical female, 1.3 = child)
+  s+N    s-N           relative scale shift (decimal: s+0.1, s-0.05)
+  s                    reset scale to opts default
+  vN                   vibrato depth in Hz (peak deviation; 0 = off)
+  v+N    v-N           relative depth shift
+  v                    reset vibrato depth
+  wN                   vibrato rate in Hz (LFO frequency, default 5)
+  w+N    w-N    w      relative / reset
+  hN                   breathiness / aspiration mix (0..1)
+  h+N    h-N    h      relative / reset
+  tN                   spectral tilt (-0.9 darker .. +0.9 brighter)
+  t+N    t-N    t      relative / reset
+  gN                   vocal effort (0 lax .. 1 tense; 0.5 default)
+  g+N    g-N    g      relative / reset
+  [base=N] etc.        verbose form, equivalent to bN, rN, pN, sN
+  # rest of line       comment
+
+f0 evolution
+  stress (!) is transient: doesn't carry forward
+  bare pitch deltas +N/-N are sticky: mutates the running pitch
+  parenthesized deltas (+N)/(-N) are transient: this phoneme only
+  bN (or bC4 etc.) is an absolute reset to that pitch
+  bare b returns to the utterance's starting pitch
+  examples:
+    "AY+20 D IH+10 D"   D at base+20, IH at base+30, D at base+30
+    "AY(+20) D IH(+10) D"  D at base, IH at base, D at base (ornaments)
+    "AY+20 D IH(+10) D" D at base+20, IH peaks at +30, D back at +20
+
+examples
+  HH AH L OW                       hello, default voice
+  b140 HH AH L OW                  higher voice
+  bA3 HH AH L OW                   higher voice (note name)
+  AY+15 D IH D                     "I did" with rise; D and IH stay raised
+  AY-15 . b120 AY+10               fall, reset, then rise
+  D IH D DH AE(+40) T              "did THAT" with accent ornament on AE
+        </pre>
+      </details>
+    </fieldset>
+
+    <fieldset>
+      <legend>canned utterances</legend>
+      <div class="row">
+        <button class="canned" data-seq="HH AH L OW">hello</button>
+        <button class="canned" data-seq="G UH D B AY">goodbye</button>
+        <button class="canned" data-seq="AY D IH D b+10 EH+10 V R IY+8 TH IH+8 NG R AY-40 T , b120 AE N D DH EY IH+10 N D AY-20 T IH-10 D M IY-10">indicted</button>
+        <button class="canned" data-seq="AY+8 M S AO+10 R IY-30 D EY+10 V">i'm sorry dave</button>
+        <button class="canned pill" data-seq="g0.7 HH IY b+20 v10 w10 D r200 IH-30 D">HE DID</button>
+        <button class="canned" data-seq="r500 AY+30 . AY-30">rise / fall</button>
+        <button class="canned" data-seq="HH AH L OW b+15 W ER L D">declination drift</button>
+        <button class="canned" data-seq="DH IH S IH Z W AY ER S EH L F S P IY K IH NG . b85 s0.7 AY K AE N S P IY K M EY L V OY S . b300 s1.17 AY K AE N S P IY K F IY M EY L V OY S . b s r200 ( K IY ) ( K OW ) ( EH ) ( K ) p60 ( K ) p60 ( K ) ( K IY ) ( K OW ) ( EH ) ( M AH ) ( S ) ( K AH )">wireself</button>
+        <button class="canned" data-seq="r200 bF#2 ( W ER K ) bA2 ( IH T ) bF#3 ( HH AA R ) bA3 ( D ER ) bC#4 ( M EY K ) bA3 ( IH T ) bF#3 ( B EH ) bA3 ( T ER ) bE2 ( D UW ) bE3 ( IH T ) bA3 ( F AE S ) bE3 ( T ER ) bB3 ( M EY K ) bA3 ( S AH S ) bG#3 ( T R AO NG ) bA3 ( G ER ) bEb2 ( M AO R ) bEb3 ( DH AE N ) bF#4 ( EH V ) bEb4 ( ER ) bB4 ( AW ) bA4 ( ER ) bF#4 ( AE F ) bEb4 ( T ER ) bD3 ( AW ) bD3 ( ER ) bF#3 ( W ER K ) bA3 ( IH Z ) bF#2 ( N EH ) ( V ER ) ( OW ) ( V ER )">harder / better / faster / stronger</button>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>audition phonemes</legend>
+      <div id="phonemes" class="row"></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>defaults (overridden by directives in the string)</legend>
+      <div class="sliders">
+        <label>base F0 (Hz)</label>
+        <input id="f0" type="range" min="70" max="320" value="120">
+        <span id="f0val">120</span>
+
+        <label>rate (ms / phoneme)</label>
+        <input id="dur" type="range" min="60" max="240" value="110">
+        <span id="durval">110</span>
+
+        <label>formant scale</label>
+        <input id="scale" type="range" min="0.70" max="1.50" step="0.01" value="1.00">
+        <span id="scaleval">1.00</span>
+
+        <label>vibrato depth (Hz)</label>
+        <input id="vibrato" type="range" min="0" max="15" step="0.5" value="0">
+        <span id="vibratoval">0</span>
+
+        <label>vibrato rate (Hz)</label>
+        <input id="vibratoRate" type="range" min="2" max="10" step="0.1" value="5">
+        <span id="vibratoRateVal">5.0</span>
+
+        <label>breathiness (h)</label>
+        <input id="aspiration" type="range" min="0" max="1" step="0.01" value="0">
+        <span id="aspval">0.00</span>
+
+        <label>spectral tilt (t)</label>
+        <input id="tilt" type="range" min="-0.9" max="0.9" step="0.01" value="0">
+        <span id="tiltval">0.00</span>
+
+        <label>vocal effort (g)</label>
+        <input id="effort" type="range" min="0" max="1" step="0.01" value="0.5">
+        <span id="effortval">0.50</span>
+      </div>
+    </fieldset>
+  </section>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

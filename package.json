@@ -1,0 +1,9 @@
+{
+  "name": "klattsch",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 8088"
+  }
+}

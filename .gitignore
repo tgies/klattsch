@@ -1,0 +1,9 @@
+node_modules/
+output/
+*.wav
+.DS_Store
+.vscode/
+.idea/
+
+# bun lockfile from one-off lint runs
+bun.lock
