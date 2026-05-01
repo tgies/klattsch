@@ -33,8 +33,8 @@ body {
 #main > fieldset:nth-of-type(4) { grid-column: 2; grid-row: 1; }
 
 @media (max-width: 880px) {
-  #main { grid-template-columns: 1fr; }
-  #main > fieldset { grid-column: 1; grid-row: auto; }
+  #main { display: block; }
+  #main > fieldset { margin: 0.75rem 0; }
 }
 
 h1 {
