@@ -8,11 +8,9 @@
 </head>
 <body>
   <h1>klattsch</h1>
-  <p class="subtitle">a formant speech synthesizer (parallel-resonator, late-70s tier)</p>
+  <p class="subtitle">a retro formant speech synthesizer</p>
 
-  <button id="start" class="primary">Start audio</button>
-
-  <section id="main" hidden>
+  <section id="main">
     <fieldset>
       <legend>phoneme sequence</legend>
       <textarea id="seq" rows="10" cols="80" autocomplete="off" spellcheck="false" wrap="soft">HH AH L OW</textarea>
@@ -103,7 +101,7 @@ examples
     </fieldset>
 
     <fieldset>
-      <legend>defaults (overridden by directives in the string)</legend>
+      <legend>defaults (commands override this)</legend>
       <div class="sliders">
         <label>base F0 (Hz)</label>
         <input id="f0" type="range" min="70" max="320" value="120">

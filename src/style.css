@@ -14,10 +14,27 @@ body {
   font-family: ui-monospace, "Cascadia Code", "JetBrains Mono", Consolas, monospace;
   background: var(--bg);
   color: var(--fg);
-  margin: 0;
+  margin: 0 auto;
   padding: 2rem;
-  max-width: 760px;
+  max-width: 1280px;
   line-height: 1.4;
+}
+
+#main {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+}
+#main > fieldset { margin: 0; }
+#main > fieldset:nth-of-type(1) { grid-column: 1; grid-row: 1; }
+#main > fieldset:nth-of-type(2) { grid-column: 1 / -1; }
+#main > fieldset:nth-of-type(3) { grid-column: 1 / -1; }
+#main > fieldset:nth-of-type(4) { grid-column: 2; grid-row: 1; }
+
+@media (max-width: 880px) {
+  #main { grid-template-columns: 1fr; }
+  #main > fieldset { grid-column: 1; grid-row: auto; }
 }
 
 h1 {
@@ -109,7 +126,7 @@ label { display: inline-block; margin-right: 0.75rem; color: var(--dim); }
 
 .sliders {
   display: grid;
-  grid-template-columns: max-content 14rem 4rem;
+  grid-template-columns: max-content minmax(8rem, 1fr) max-content;
   gap: 0.4rem 0.8rem;
   align-items: center;
   font-size: 0.9rem;

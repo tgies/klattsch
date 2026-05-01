@@ -3,8 +3,6 @@ import { compileString } from './engine/sequencer.js';
 import { PHONEME_KEYS } from './engine/phonemes.js';
 import { encodeWav } from './engine/wav.js';
 
-const startBtn   = document.getElementById('start');
-const mainSection = document.getElementById('main');
 const seqInput   = document.getElementById('seq');
 const speakBtn   = document.getElementById('speak');
 const renderBtn  = document.getElementById('render');
@@ -29,18 +27,22 @@ const status            = document.getElementById('status');
 
 let ctx = null;
 let node = null;
+let audioInit = null;
 
-async function startAudio() {
-  ctx = new AudioContext();
-  await ctx.audioWorklet.addModule('src/formant-worklet.js');
-  node = new AudioWorkletNode(ctx, 'formant-processor', {
-    numberOfOutputs: 1,
-    outputChannelCount: [1],
-  });
-  node.connect(ctx.destination);
-  startBtn.hidden = true;
-  mainSection.hidden = false;
-  buildPhonemeButtons();
+// Lazy init: AudioContext can only start on a user gesture, so we wait
+// for the first interaction (speak / canned / phoneme button / Enter).
+function ensureAudio() {
+  if (audioInit) return audioInit;
+  audioInit = (async () => {
+    ctx = new AudioContext();
+    await ctx.audioWorklet.addModule('src/formant-worklet.js');
+    node = new AudioWorkletNode(ctx, 'formant-processor', {
+      numberOfOutputs: 1,
+      outputChannelCount: [1],
+    });
+    node.connect(ctx.destination);
+  })();
+  return audioInit;
 }
 
 function compileOpts() {
@@ -56,8 +58,8 @@ function compileOpts() {
   };
 }
 
-function speak(text) {
-  if (!node) return;
+async function speak(text) {
+  await ensureAudio();
   const { schedule, warnings } = compileString(text, compileOpts());
   if (warnings.length) {
     setStatus(warnings.join(' '), 'warn');
@@ -111,14 +113,16 @@ function buildPhonemeButtons() {
   }
 }
 
-startBtn.addEventListener('click', () => {
-  startAudio().catch(err => {
-    console.error(err);
-    startBtn.textContent = 'audio failed - see console';
-  });
-});
+buildPhonemeButtons();
 
-speakBtn.addEventListener('click', () => speak(seqInput.value));
+function trySpeak(text) {
+  speak(text).catch(err => {
+    console.error(err);
+    setStatus('audio failed: ' + err.message, 'warn');
+  });
+}
+
+speakBtn.addEventListener('click', () => trySpeak(seqInput.value));
 renderBtn.addEventListener('click', () => {
   renderWav(seqInput.value).catch(err => {
     console.error(err);
@@ -130,7 +134,7 @@ renderBtn.addEventListener('click', () => {
 seqInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
-    speak(seqInput.value);
+    trySpeak(seqInput.value);
   }
 });
 
@@ -138,7 +142,7 @@ document.querySelectorAll('button.canned').forEach(b => {
   b.addEventListener('click', () => {
     const seq = b.dataset.seq;
     seqInput.value = seq;
-    speak(seq);
+    trySpeak(seq);
   });
 });
 
