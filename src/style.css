@@ -64,6 +64,28 @@ h1 {
   border-bottom-color: var(--accent);
 }
 
+.outro {
+  margin: 1.75rem 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--dim);
+  max-width: 56em;
+}
+.outro p {
+  margin: 0.4rem 0;
+}
+.outro a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.outro a:hover {
+  border-bottom-color: var(--accent);
+}
+.outro .aside {
+  opacity: 0.75;
+  font-style: italic;
+}
+
 button {
   background: #262626;
   color: var(--fg);
