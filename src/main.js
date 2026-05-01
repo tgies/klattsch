@@ -7,6 +7,8 @@ const seqInput   = document.getElementById('seq');
 const speakBtn   = document.getElementById('speak');
 const renderBtn  = document.getElementById('render');
 const videoBtn   = document.getElementById('render-video');
+const shareBtn   = document.getElementById('share');
+const submitBtn  = document.getElementById('submit-preset');
 const phonemesDiv = document.getElementById('phonemes');
 const f0Slider          = document.getElementById('f0');
 const f0Val             = document.getElementById('f0val');
@@ -351,6 +353,68 @@ document.querySelectorAll('button.canned').forEach(b => {
     seqInput.value = seq;
     trySpeak(seq);
   });
+});
+
+async function compressSeq(str) {
+  const stream = new Response(str).body
+    .pipeThrough(new CompressionStream('deflate-raw'));
+  const buf = new Uint8Array(await new Response(stream).arrayBuffer());
+  let s = '';
+  for (let i = 0; i < buf.length; i++) s += String.fromCharCode(buf[i]);
+  return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+async function decompressSeq(b64) {
+  const pad = b64.length % 4;
+  const padded = b64.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat(pad ? 4 - pad : 0);
+  const bin = Uint8Array.from(atob(padded), c => c.charCodeAt(0));
+  const stream = new Response(bin).body
+    .pipeThrough(new DecompressionStream('deflate-raw'));
+  return await new Response(stream).text();
+}
+
+(async () => {
+  const params = new URLSearchParams(window.location.search);
+  const z = params.get('z');
+  const seq = params.get('seq');
+  if (z) {
+    try {
+      seqInput.value = await decompressSeq(z);
+    } catch (err) {
+      console.error('decompress failed:', err);
+      setStatus('shared link could not be decoded', 'warn');
+    }
+  } else if (seq) {
+    seqInput.value = seq;
+  }
+})();
+
+shareBtn.addEventListener('click', async () => {
+  try {
+    const text = seqInput.value;
+    const z = await compressSeq(text);
+    const base = window.location.origin + window.location.pathname;
+    const urlZ = new URL(base); urlZ.searchParams.set('z', z);
+    const urlSeq = new URL(base); urlSeq.searchParams.set('seq', text);
+    const link = urlZ.toString().length < urlSeq.toString().length
+      ? urlZ.toString()
+      : urlSeq.toString();
+    await navigator.clipboard.writeText(link);
+    setStatus(`share link copied (${link.length} chars)`);
+  } catch (err) {
+    console.error(err);
+    setStatus('share failed: ' + err.message, 'warn');
+  }
+});
+
+submitBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  const body =
+    '## label\n\n\n\n## phoneme string\n\n```\n' +
+    seqInput.value +
+    '\n```\n\n## what it is\n\n\n\n## credit\n\n';
+  const url = `https://github.com/tgies/klattsch/issues/new?template=preset.md&body=${encodeURIComponent(body)}`;
+  window.open(url, '_blank', 'noopener');
 });
 
 f0Slider.addEventListener('input', () => f0Val.textContent = f0Slider.value);
