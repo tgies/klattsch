@@ -99,6 +99,10 @@ node.port.postMessage({ type: 'schedule', schedule });
 - Rosenberg, A. E. (1971). *Effect of glottal pulse shape on the quality of natural vowels.*
 - Robinson, R. Bristow-Johnson. *Audio EQ Cookbook.*
 
+## See also
+
+- [**libadlmidi-js**](https://github.com/libadlmidi-js/libadlmidi-js) - WebAssembly build of libADLMIDI, an OPL3 FM synthesis library with AudioWorklet integration. Where klattsch does parallel-formant *vocal-tract* synthesis, libadlmidi-js does FM-operator synthesis: the sound of early-80s arcade boards and AdLib cards. Includes [oplsfxr](https://libadlmidi-js.github.io/examples/oplsfxr.html), a sfxr-style sound effect generator.
+
 ## Commercial Support
 
 `klattsch` is built and maintained by [Tony Gies](https://github.com/tgies). For studios, indie developers, and agencies integrating klattsch into a shipped product, consulting is available through his consultancy, Crash United, LLC.
