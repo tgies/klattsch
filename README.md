@@ -23,8 +23,12 @@ See the in-app `syntax help` panel for the full directive table.
 
 ## Using the engine without the browser
 
+```bash
+npm install klattsch
+```
+
 ```js
-import { compileString, FormantSynth, encodeWav } from './src/engine/index.js';
+import { compileString, FormantSynth, encodeWav } from 'klattsch';
 
 const sampleRate = 48000;
 const { schedule, totalMs } = compileString('HH AH L OW');
@@ -39,7 +43,7 @@ const { bytes } = encodeWav(buf, sampleRate);
 A standalone CLI that does exactly the above is included:
 
 ```bash
-node bin/klattsch-render.mjs "HH AH L OW" hello.wav
+npx klattsch-render "HH AH L OW" hello.wav
 ```
 
 ## How it works
