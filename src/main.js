@@ -210,6 +210,8 @@ async function renderVideo(text) {
 
   function compose() {
     cctx.drawImage(spec, 0, 0);
+
+    // Phoneme string overlay along the bottom edge
     cctx.save();
     cctx.globalAlpha = 0.5;
     cctx.fillStyle = '#fff';
@@ -223,6 +225,16 @@ async function renderVideo(text) {
       cctx.fillText(line, pad, y);
       y += lh;
     }
+    cctx.restore();
+
+    // Attribution watermark, top-right corner
+    cctx.save();
+    cctx.globalAlpha = 0.6;
+    cctx.fillStyle = '#fff';
+    cctx.font = '22px ui-monospace, "Cascadia Code", Consolas, monospace';
+    cctx.textBaseline = 'top';
+    cctx.textAlign = 'right';
+    cctx.fillText('klattsch  ·  tgies.github.io/klattsch', W - 24, 24);
     cctx.restore();
   }
 
