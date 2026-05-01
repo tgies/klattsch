@@ -46,8 +46,22 @@ h1 {
 
 .subtitle {
   opacity: 0.55;
-  margin: 0.25rem 0 1.5rem;
+  margin: 0.25rem 0 0.4rem;
   font-size: 0.9rem;
+}
+
+.support {
+  margin: 0 0 1.5rem;
+  font-size: 0.9rem;
+  color: var(--dim);
+}
+.support a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.support a:hover {
+  border-bottom-color: var(--accent);
 }
 
 button {
