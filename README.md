@@ -43,7 +43,7 @@ const { bytes } = encodeWav(buf, sampleRate);
 A standalone CLI that does exactly the above is included:
 
 ```bash
-npx klattsch-render "HH AH L OW" hello.wav
+npx klattsch "HH AH L OW" hello.wav
 ```
 
 ## How it works

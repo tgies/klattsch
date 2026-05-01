@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 // Standalone WAV renderer
 //
-//   node bin/klattsch-render.mjs "HH AH L OW" hello.wav
-//   node bin/klattsch-render.mjs "b140 AY+30 . AY-30" sweep.wav
+//   node bin/klattsch.mjs "HH AH L OW" hello.wav
+//   node bin/klattsch.mjs "b140 AY+30 . AY-30" sweep.wav
 
 import { writeFileSync } from 'node:fs';
 import {
   compileString, FormantSynth, encodeWav,
 } from '../src/engine/index.js';
 
-const [, , text, outPath = 'klattsch-render.wav'] = process.argv;
+const [, , text, outPath = 'klattsch.wav'] = process.argv;
 if (!text) {
-  console.error('usage: klattsch-render.mjs <phoneme-string> [output.wav]');
-  console.error('  e.g. klattsch-render.mjs "HH AH L OW" hello.wav');
+  console.error('usage: klattsch <phoneme-string> [output.wav]');
+  console.error('  e.g. klattsch "HH AH L OW" hello.wav');
   process.exit(1);
 }
 

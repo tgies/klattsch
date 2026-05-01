@@ -22,7 +22,7 @@
     "LICENSE"
   ],
   "bin": {
-    "klattsch-render": "./bin/klattsch-render.mjs"
+    "klattsch": "./bin/klattsch.mjs"
   },
   "sideEffects": false,
   "keywords": [
