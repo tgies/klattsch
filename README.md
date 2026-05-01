@@ -4,7 +4,9 @@ A primitive parallel-formant speech synthesizer in the browser. Late-70s / early
 
 The name is a portmanteau of *Klatt* (Dennis Klatt, the formant-synth pioneer) and *Klatsch* (German for gossip / casual chat).
 
-[**Live demo**](https://tgies.github.io/klattsch/) - [**Commercial support**](#commercial-support) - integration consulting via Crash United, LLC
+[**Live demo**](https://tgies.github.io/klattsch/)
+
+[**Commercial support**](#commercial-support) - integration consulting from the author
 
 ## What it does
 
