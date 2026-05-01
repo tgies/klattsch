@@ -8,7 +8,7 @@ The name is a portmanteau of *Klatt* (Dennis Klatt, the formant-synth pioneer) a
 
 ## What it does
 
-You type a phoneme string in ARPABET, with optional directives, and the computer says it.
+You type a phoneme string in [ARPABET](https://en.wikipedia.org/wiki/ARPABET), with optional directives, and the computer says it.
 
 ```
 HH AH L OW                        hello, default voice
