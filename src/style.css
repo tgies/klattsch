@@ -32,18 +32,6 @@ body {
 #main > fieldset:nth-of-type(3) { grid-column: 1 / -1; }
 #main > fieldset:nth-of-type(4) { grid-column: 2; grid-row: 1; }
 
-@media (max-width: 880px) {
-  #main { display: block; }
-  #main > fieldset { margin: 0.75rem 0; }
-  .outro { display: block; }
-  .outro .sponsor-pitch { margin-top: 1rem; }
-  .page-header .sponsor-strip {
-    max-width: none;
-    align-self: stretch;
-    margin-top: 0.5rem;
-  }
-}
-
 h1 {
   font-size: 2.2rem;
   margin: 0;
@@ -104,6 +92,15 @@ h1 {
 .outro .aside {
   opacity: 0.75;
   font-style: italic;
+}
+.outro .update {
+  border-left: 3px solid var(--accent);
+  padding-left: 0.75rem;
+  margin: 0.25rem 0 0.85rem;
+}
+.outro .update strong {
+  color: var(--accent);
+  letter-spacing: 0.04em;
 }
 
 button {
@@ -291,3 +288,13 @@ details.syntax pre {
   border-bottom: 1px solid transparent;
 }
 .sponsor-pitch a:hover { border-bottom-color: var(--accent); }
+
+@media (max-width: 880px) {
+  #main { display: block; }
+  #main > fieldset { margin: 0.75rem 0; }
+
+  .page-header .sponsor-strip { display: none; }
+
+  .outro { display: block; }
+  .outro .sponsor-pitch { margin-top: 1rem; }
+}
