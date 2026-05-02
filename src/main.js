@@ -69,6 +69,7 @@ async function speak(text) {
   } else {
     setStatus('');
   }
+  node.port.postMessage({ type: 'reset' });
   node.port.postMessage({ type: 'schedule', schedule });
 }
 

@@ -18,6 +18,8 @@ class FormantProcessor extends AudioWorkletProcessor {
         this.synth.setTarget(msg.target, msg.transitionMs);
       } else if (msg?.type === 'schedule') {
         this.synth.queueSchedule(msg.schedule);
+      } else if (msg?.type === 'reset') {
+        this.synth.reset(msg.initialTarget);
       }
     };
   }

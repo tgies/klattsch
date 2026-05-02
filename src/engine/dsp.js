@@ -34,6 +34,10 @@ export class BandpassBiquad {
     this.y2 = this.y1; this.y1 = y;
     return y;
   }
+  reset() {
+    this.x1 = 0; this.x2 = 0;
+    this.y1 = 0; this.y2 = 0;
+  }
 }
 
 // Derivative of the Rosenberg glottal pulse. Phase normalized to [0, 1).

@@ -88,6 +88,24 @@ export class FormantSynth {
     this.sampleCounter = 0;
   }
 
+  reset(initialTarget) {
+    this.glottalPhase = 0;
+    this.vibratoPhase = 0;
+    this.lfsr = 0xACE1ACE1 | 0;
+    this.tiltPrev = 0;
+    this.bp1.reset();
+    this.bp2.reset();
+    this.bp3.reset();
+    const init = initialTarget ?? {};
+    this.current = { ...DEFAULT, ...init };
+    this.target = { ...this.current };
+    for (const k of PARAMS) this.increment[k] = 0;
+    this.transitionSamples = 0;
+    this.schedule = [];
+    this.scheduleIdx = 0;
+    this.sampleCounter = 0;
+  }
+
   // Render `out.length` samples into the given Float32Array
   process(out) {
     const cur = this.current;
