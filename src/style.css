@@ -35,6 +35,13 @@ body {
 @media (max-width: 880px) {
   #main { display: block; }
   #main > fieldset { margin: 0.75rem 0; }
+  .outro { display: block; }
+  .outro .sponsor-pitch { margin-top: 1rem; }
+  .page-header .sponsor-strip {
+    max-width: none;
+    align-self: stretch;
+    margin-top: 0.5rem;
+  }
 }
 
 h1 {
@@ -68,8 +75,12 @@ h1 {
   margin: 1.75rem 0 0.5rem;
   font-size: 0.85rem;
   color: var(--dim);
-  max-width: 56em;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
 }
+.outro-text { max-width: 56em; }
 .outro p {
   margin: 0.4rem 0;
 }
@@ -203,3 +214,71 @@ details.syntax pre {
   line-height: 1.45;
   color: var(--dim);
 }
+
+.sponsor-strip {
+  margin: 0.4rem 0 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px dashed var(--line);
+  border-radius: 3px;
+  font-size: 0.85rem;
+  color: var(--dim);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+}
+.sponsor-strip .label {
+  text-transform: lowercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  font-size: 0.72rem;
+  border: 1px solid var(--accent);
+  padding: 0.05rem 0.45rem;
+  border-radius: 2px;
+}
+.sponsor-strip a {
+  color: var(--fg);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent);
+}
+.sponsor-strip a:hover { color: var(--accent); }
+.sponsor-strip[data-state="sold"] { border-style: solid; }
+.sponsor-strip[data-state="sold"] img {
+  max-height: 36px;
+  max-width: 180px;
+  vertical-align: middle;
+  display: block;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.title-block { flex: 0 1 auto; min-width: 0; }
+.page-header .sponsor-strip {
+  margin: 0;
+  max-width: 22rem;
+  flex: 0 1 auto;
+  align-self: center;
+}
+
+.sponsor-pitch {
+  margin: 1rem 0 0.5rem;
+  padding: 0.75rem 1rem;
+  border: 1px dashed var(--line);
+  border-radius: 3px;
+  font-size: 0.85rem;
+  color: var(--dim);
+}
+.sponsor-pitch p { margin: 0.35rem 0; }
+.sponsor-pitch strong { color: var(--fg); }
+.sponsor-pitch .price { color: var(--fg); font-weight: 600; }
+.sponsor-pitch a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.sponsor-pitch a:hover { border-bottom-color: var(--accent); }

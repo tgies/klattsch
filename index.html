@@ -7,8 +7,16 @@
   <link rel="stylesheet" href="src/style.css">
 </head>
 <body>
-  <h1>klattsch</h1>
-  <p class="subtitle">a retro formant speech synthesizer</p>
+  <div class="page-header">
+    <div class="title-block">
+      <h1>klattsch</h1>
+      <p class="subtitle">a retro formant speech synthesizer</p>
+    </div>
+    <div class="sponsor-strip" data-state="available">
+      <span class="label">sponsor</span>
+      <span><a href="mailto:support@crashunited.com?subject=klattsch%20sponsorship">$500/mo or $2000 for 6 months</a></span>
+    </div>
+  </div>
   <p class="support">
     <a href="https://github.com/tgies/klattsch" target="_blank" rel="noopener">source</a>
     ·
@@ -155,10 +163,17 @@ examples
   </section>
 
   <footer class="outro">
-    <p>klattsch ships as an npm package and works in node, in the browser, and as a CLI. you can drop it into your own game, app, or website. <a href="https://github.com/tgies/klattsch" target="_blank" rel="noopener">learn more</a>.</p>
-    <p>made something good? <a href="https://github.com/tgies/klattsch/issues/new?template=preset.md" id="submit-preset" target="_blank" rel="noopener">submit it as a preset</a> and it might end up in the canned list above.</p>
-    <p>you might also like <a href="https://libadlmidi-js.github.io/examples/oplsfxr.html" target="_blank" rel="noopener">oplsfxr</a>, my other sound toy thing.</p>
-    <p class="aside">if you enjoyed klattsch please consider sending me a few bucks via the sponsors or ko-fi links above thanks it's been a rough year</p>
+    <div class="outro-text">
+      <p>klattsch ships as an npm package and works in node, in the browser, and as a CLI. you can drop it into your own game, app, or website. <a href="https://github.com/tgies/klattsch" target="_blank" rel="noopener">learn more</a>.</p>
+      <p>made something good? <a href="https://github.com/tgies/klattsch/issues/new?template=preset.md" id="submit-preset" target="_blank" rel="noopener">submit it as a preset</a> and it might end up in the canned list above.</p>
+      <p>you might also like <a href="https://libadlmidi-js.github.io/examples/oplsfxr.html" target="_blank" rel="noopener">oplsfxr</a>, my other sound toy thing.</p>
+      <p class="aside">if you enjoyed klattsch please consider sending me a few bucks via the sponsors or ko-fi links above thanks it's been a rough year</p>
+    </div>
+
+    <div class="sponsor-pitch">
+      <p><strong>sponsor klattsch.</strong> your logo on the page, linked to your site. <span class="price">$500/mo</span>, or <span class="price">$2000 for a 6-month run</span>.</p>
+      <p>email <a href="mailto:support@crashunited.com?subject=klattsch%20sponsorship">support@crashunited.com</a>.</p>
+    </div>
   </footer>
 
   <script type="module" src="src/main.js"></script>
