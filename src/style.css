@@ -68,6 +68,50 @@ h1 {
   color: var(--dim);
 }
 
+.announce {
+  margin: 0 0 1rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  background: rgba(255, 106, 0, 0.06);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+.announce-label {
+  display: inline-block;
+  background: var(--accent);
+  color: #000;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  font-weight: 700;
+  vertical-align: middle;
+  margin-right: 0.55rem;
+}
+.announce-body {
+  color: var(--fg);
+}
+.announce-cta {
+  display: inline-block;
+  background: var(--accent);
+  color: #000;
+  text-decoration: none;
+  padding: 0.15rem 0.65rem;
+  border-radius: 2px;
+  font-weight: 600;
+  border: 1px solid var(--accent);
+  vertical-align: middle;
+  margin-left: 0.55rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.announce-cta:hover {
+  background: #ffb070;
+  color: #000;
+}
+
 .outro {
   margin: 1.75rem 0 0.5rem;
   font-size: 0.85rem;
