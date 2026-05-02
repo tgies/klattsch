@@ -127,7 +127,7 @@ export class FormantSynth {
                 + (1 - v) * noiseSample * 0.35
                 + cur.aspiration * noiseSample * 0.5;
       this.glottalPhase += effF0 / this.sr;
-      if (this.glottalPhase >= 1) this.glottalPhase -= 1;
+      this.glottalPhase -= Math.floor(this.glottalPhase);
 
       this.bp1.setFreq(cur.F1, cur.BW1, this.sr);
       this.bp2.setFreq(cur.F2, cur.BW2, this.sr);
