@@ -70,6 +70,15 @@ h1 {
 .support a:hover {
   border-bottom-color: var(--accent);
 }
+.support .support-sep {
+  margin: 0 0.7rem;
+  color: var(--line);
+}
+.support .support-label {
+  margin-right: 0.35rem;
+  font-style: italic;
+  color: var(--dim);
+}
 
 .outro {
   margin: 1.75rem 0 0.5rem;
