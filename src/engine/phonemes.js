@@ -128,3 +128,4 @@ export const phonemes = {
 };
 
 export const PHONEME_KEYS = Object.keys(phonemes).filter(k => !k.startsWith('_'));
+export { wordPhonemes } from './cmu.js';

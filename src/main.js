@@ -1,6 +1,6 @@
 // Page-specific glue
 import { compileString } from './engine/sequencer.js';
-import { PHONEME_KEYS } from './engine/phonemes.js';
+import { PHONEME_KEYS, wordPhonemes } from './engine/phonemes.js';
 import { encodeWav } from './engine/wav.js';
 
 const seqInput   = document.getElementById('seq');
@@ -9,6 +9,7 @@ const stopBtn    = document.getElementById('stop');
 const renderBtn  = document.getElementById('render');
 const videoBtn   = document.getElementById('render-video');
 const shareBtn   = document.getElementById('share');
+const spellBtn   = document.getElementById('spell');
 const submitBtn  = document.getElementById('submit-preset');
 const filenameInput = document.getElementById('filename');
 const videoTitleInput = document.getElementById('video-title');
@@ -884,6 +885,22 @@ insertStateBtn.addEventListener('click', () => {
   seqInput.value = dirs + ' ' + seqInput.value.replace(/^\s+/, '');
   seqInput.dispatchEvent(new Event('input'));
   seqInput.focus();
+});
+
+spellBtn.addEventListener('click', () => {
+  setStatus('');
+
+  const start = seqInput.selectionStart;
+  const end = seqInput.selectionEnd;
+
+  const word = seqInput.value.substring(start, end).toUpperCase().trim();
+
+  if (word in wordPhonemes) {
+    setStatus('word spelling: "' + wordPhonemes[word] + '"');
+    return;
+  }
+
+  setStatus('spell word failed: unknown word "' + word + '"', 'warn');
 });
 
 updateStateMirror();

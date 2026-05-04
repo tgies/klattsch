@@ -16,6 +16,7 @@
 //   ./phonemes.js     - ARPABET phoneme parameter table
 //   ./sequencer.js    - text-to-schedule compiler
 //   ./wav.js          - WAV encoder
+//   ./cmu.js          - CMU dictionary for word phonemes
 
 export { BandpassBiquad, glottalPulse, xorshift, softClip } from './dsp.js';
 export { FormantSynth, PARAMS, DEFAULT, renderToBuffer } from './synth-core.js';
