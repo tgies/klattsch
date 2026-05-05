@@ -904,3 +904,44 @@ spellBtn.addEventListener('click', () => {
 });
 
 updateStateMirror();
+
+const CONSENT_KEY = 'klattsch.analytics-consent';
+function gtagSafe(...args) {
+  if (typeof window.gtag === 'function') window.gtag(...args);
+}
+function updateAnalyticsConsent(granted) {
+  gtagSafe('consent', 'update', {
+    analytics_storage: granted ? 'granted' : 'denied',
+    ad_storage: granted ? 'granted' : 'denied',
+    ad_user_data: granted ? 'granted' : 'denied',
+    ad_personalization: granted ? 'granted' : 'denied',
+  });
+}
+function getConsent() {
+  try {
+    const v = localStorage.getItem(CONSENT_KEY);
+    if (v === 'true') return true;
+    if (v === 'false') return false;
+  } catch {}
+  return null;
+}
+function setConsent(granted) {
+  try { localStorage.setItem(CONSENT_KEY, String(granted)); } catch {}
+  updateAnalyticsConsent(granted);
+}
+
+const consentBanner = document.getElementById('cookie-consent');
+const initialConsent = getConsent();
+if (initialConsent === true) {
+  updateAnalyticsConsent(true);
+} else if (initialConsent === null && consentBanner) {
+  consentBanner.hidden = false;
+}
+document.getElementById('cookie-accept')?.addEventListener('click', () => {
+  setConsent(true);
+  if (consentBanner) consentBanner.hidden = true;
+});
+document.getElementById('cookie-decline')?.addEventListener('click', () => {
+  setConsent(false);
+  if (consentBanner) consentBanner.hidden = true;
+});

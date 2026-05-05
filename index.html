@@ -4,7 +4,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>klattsch - primitive formant synth</title>
-  <link rel="stylesheet" href="src/style.css?v=0.3.0">
+  <link rel="stylesheet" href="src/style.css?v=0.3.3">
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'analytics_storage': 'denied',
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied'
+    });
+  </script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-D20MDP81EK"></script>
+  <script>
+    gtag('js', new Date());
+    gtag('config', 'G-D20MDP81EK');
+  </script>
 </head>
 <body>
   <div class="page-header">
@@ -38,10 +53,21 @@
     <a class="announce-cta" href="https://discord.gg/9YESUYG4xC" target="_blank" rel="noopener">join →</a>
   </section>
 
-  <aside class="ja-greeting" lang="ja">
-    <p><strong>日本のユーザーの皆様へ</strong></p>
-    <p>たくさんの反響をいただき、本当にありがとうございます。身に余る思いです。日本語の音素対応など、klattsch をより使いやすくするための改良を進めています。続報をお楽しみに。</p>
+  <aside class="thank-you">
+    <details class="thank-you-en">
+      <summary><strong>a message from the creator.</strong></summary>
+      <p>i'm amazed at the response my little toy has gotten! the songs and videos and other fun stuff people are making have been amazing to see. you all made a dream come true for me. i love making things that people can use to create, share, and express themselves, and i hope to keep building things like this. the support links up above really help keep me at that, if you're able! <strong>but what helps most of all is to keep enthusiastically sharing your amazing creations far and wide. tag me <a href="https://x.com/me_irl" target="_blank" rel="noopener">@me_irl</a>! #klattsch</strong></p>
+    </details>
+    <details class="thank-you-ja" lang="ja">
+      <summary><strong>日本のユーザーの皆様へ</strong></summary>
+      <p>自分のささやかなおもちゃがこんなに反響をいただけるなんて、本当に驚いています！皆さんが作ってくれた歌や動画、その他いろいろな楽しい作品を見られるのは、本当に嬉しい気持ちでいっぱいです。皆さんのおかげで、夢が叶いました。人が何かを作ったり、共有したり、自分を表現したりするためのものを作るのが、僕は本当に好きで、これからもこういうものを作り続けていけたらと思っています。日本語の音素対応など、より使いやすくするための改良も少しずつ進めています。上のサポートリンクからのご支援は、続けていくための大きな後押しになります。よろしければぜひ！<strong>そして何よりも、皆さんが作った素敵な作品を、ぜひどんどん広くシェアしていただけることが、一番の助けになります。<a href="https://x.com/me_irl" target="_blank" rel="noopener">@me_irl</a> のタグもぜひ！#klattsch</strong></p>
+    </details>
   </aside>
+  <script>
+    if (matchMedia('(min-width: 720px)').matches) {
+      document.querySelectorAll('.thank-you details').forEach(function (d) { d.setAttribute('open', ''); });
+    }
+  </script>
 
   <section id="main">
     <fieldset>
@@ -272,6 +298,18 @@ examples
     </div>
   </dialog>
 
-  <script type="module" src="src/main.js?v=0.3.0"></script>
+  <aside id="cookie-consent" class="cookie-consent" hidden>
+    <p class="cookie-consent-title">analytics consent</p>
+    <p class="cookie-consent-body">
+      klattsch uses google analytics to count traffic.
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">privacy policy</a>
+    </p>
+    <div class="cookie-consent-actions">
+      <button id="cookie-decline" type="button">decline</button>
+      <button id="cookie-accept" type="button" class="primary">accept</button>
+    </div>
+  </aside>
+
+  <script type="module" src="src/main.js?v=0.3.2"></script>
 </body>
 </html>

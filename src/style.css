@@ -112,6 +112,66 @@ h1 {
   color: #000;
 }
 
+.cookie-consent {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 9998;
+  width: 22rem;
+  max-width: calc(100vw - 2rem);
+  padding: 0.75rem 1rem 0.85rem;
+  background: var(--panel);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+  font-size: 0.85rem;
+}
+.cookie-consent[hidden] { display: none; }
+.cookie-consent .cookie-consent-title {
+  margin: 0 0 0.4rem;
+  color: var(--accent);
+  font-size: 0.72rem;
+  text-transform: lowercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+.cookie-consent .cookie-consent-body {
+  margin: 0 0 0.7rem;
+  color: var(--dim);
+  line-height: 1.55;
+  font-size: 0.85rem;
+}
+.cookie-consent .cookie-consent-body a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.cookie-consent .cookie-consent-body a:hover {
+  border-bottom-color: var(--accent);
+}
+.cookie-consent .cookie-consent-actions {
+  display: flex;
+  gap: 0.45rem;
+  justify-content: flex-end;
+  align-items: center;
+}
+.cookie-consent .cookie-consent-actions button {
+  font-size: 0.8rem;
+  padding: 0.3rem 0.85rem;
+  margin: 0;
+}
+.cookie-consent .cookie-consent-actions button.primary {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.cookie-consent .cookie-consent-actions button.primary:hover {
+  background: #ffb070;
+  color: #000;
+  border-color: #ffb070;
+}
+
 .changelog-dialog {
   background: var(--panel);
   color: var(--fg);
@@ -159,21 +219,51 @@ h1 {
   color: var(--fg);
 }
 
-.ja-greeting {
+.thank-you {
   margin: 0 0 1rem;
   padding: 0.55rem 0.85rem;
   border: 1px dashed var(--line);
   border-radius: 3px;
   font-size: 0.85rem;
-  line-height: 1.7;
+  line-height: 1.65;
   color: var(--dim);
+}
+.thank-you details + details {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--line);
+}
+.thank-you summary {
+  cursor: pointer;
+}
+.thank-you details > p {
+  margin: 0.4rem 0 0;
+}
+.thank-you-ja {
   font-family: ui-sans-serif, "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", "Noto Sans JP", system-ui, sans-serif;
 }
-.ja-greeting p { margin: 0; }
-.ja-greeting p + p { margin-top: 0.25rem; }
-.ja-greeting strong {
+.thank-you strong {
   color: var(--fg);
   font-weight: 600;
+}
+.thank-you a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.thank-you a:hover {
+  border-bottom-color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .thank-you {
+    font-size: 0.8rem;
+    line-height: 1.55;
+    padding: 0.45rem 0.7rem;
+  }
+  .thank-you details:not([open]) summary {
+    opacity: 0.85;
+  }
 }
 
 .outro {
