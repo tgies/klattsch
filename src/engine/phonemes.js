@@ -122,6 +122,24 @@ export const phonemes = {
   JH: { isStop: true, voicing: 0.5, F1: 260, F2: 1800, F3: 2820,
         BW1:  60, BW2:  80, BW3: 270, A1: 0.40, A2: 0.40, A3: 0.50 },
 
+  // Japanese vowels
+  I: vowel(350, 2000, 3000, 60, 130, 140),
+  E: vowel(500, 1700, 2300, 60, 100, 250),
+  A: vowel(750, 1250, 2250, 180, 110, 220),
+  O: vowel(500, 850, 2250, 60, 110, 130),
+  U: vowel(450, 1250, 2150, 50, 120, 130),
+  
+  // my DX attempts
+  DXA: sonorant(310, 1055, 2130, 60, 100, 200),
+  DXB:  { isStop: true, voicing: 0.6, F1: 255, F2: 1330, F3: 2365,
+        BW1:  60, BW2: 100, BW3: 185, A1: 0.65, A2: 0.55, A3: 0.50 },
+  DXC:  { isStop: true, voicing: 0.6, F1: 310, F2: 1055, F3: 2130,
+        BW1:  60, BW2: 100, BW3: 200, A1: 0.8, A2: 0.7, A3: 0.50 },
+  DXD:  { isStop: true, voicing: 0.6, F1: 310, F2: 1060, F3: 1380,
+        BW1:  70, BW2: 100, BW3: 120, A1: 0.8, A2: 0.7, A3: 0.50 },
+  DXE:  { isStop: true, voicing: 0.6, F1: 255, F2: 1325, F3: 2740,
+        BW1:  55, BW2: 100, BW3: 225, A1: 0.65, A2: 0.55, A3: 0.50 },
+
   // Silence
   _:  { voicing: 0, F1: 500, F2: 1500, F3: 2500, BW1: 80, BW2: 120, BW3: 160,
         A1: 0, A2: 0, A3: 0 },
