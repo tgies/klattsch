@@ -150,6 +150,32 @@ export function tokenize(rawInput) {
     const srcEnd = i;
     if (!part) continue;
 
+    // Split consecutive directives like [sr=8000][bit=8]
+    if (part.startsWith('[')) {
+      const directiveMatches = part.match(/\[[^\]]+\]/g);
+      if (directiveMatches && directiveMatches.length > 1) {
+        // Multiple directives back-to-back
+        for (let j = 0; j < directiveMatches.length; j++) {
+          const match = directiveMatches[j];
+          const tok = classifyPart(match);
+          if (!tok) continue;
+          // For proper source tracking, estimate positions
+          const offset = j > 0 ? part.indexOf(match, directiveMatches[j-1].length) : 0;
+          tok.srcStart = srcStart + offset;
+          tok.srcEnd = srcStart + offset + match.length;
+
+          if (tok.type === 'stress_mark') {
+            for (let k = tokens.length - 1; k >= 0; k--) {
+              if (tokens[k].type === 'phoneme') { tokens[k].stressed = true; break; }
+            }
+            continue;
+          }
+          tokens.push(tok);
+        }
+        continue;
+      }
+    }
+
     const tok = classifyPart(part);
     if (!tok) continue;
     tok.srcStart = srcStart;
@@ -182,6 +208,8 @@ export function compile(parsed, opts = {}) {
   const initialAspiration  = opts.aspiration ?? 0;
   const initialTilt        = opts.tilt ?? 0;
   const initialEffort      = opts.effort ?? 0.5;
+  const initialBitDepth    = opts.bitDepth ?? 0;
+  const initialSampleRate  = opts.sampleRate ?? null; // null means use native
   const registry           = opts.registry ?? banks;
   const initialPhonemes    = resolveBank(opts.bank, registry).phonemes;
   let phonemes             = initialPhonemes;
@@ -195,6 +223,8 @@ export function compile(parsed, opts = {}) {
   let aspiration   = initialAspiration;
   let tilt         = initialTilt;
   let effort       = initialEffort;
+  let bitDepth     = initialBitDepth;
+  let sampleRate   = initialSampleRate;
   // Bare `b` / `r` / `s` / `v` / `h` / `t` / `g` reset to opts values
   const schedule = [];
   const warnings = [];
@@ -290,6 +320,7 @@ export function compile(parsed, opts = {}) {
     aspiration,
     tilt,
     effort,
+    bitDepth,
   });
 
   const emit = (target, transitionMs) => {
@@ -396,6 +427,21 @@ export function compile(parsed, opts = {}) {
           silence();
           timeMs += Math.abs(t.value);
           emitPhrase(t);
+          break;
+        case 'sr':
+        case 'sampleRate':
+          sampleRate = t.value > 0 ? t.value : null;
+          // Emit meta-parameter change as immediate event (transitionMs: 0)
+          // Only emit if value is not null (using default)
+          if (sampleRate !== null) {
+            emit({ sampleRate }, 0);
+          }
+          break;
+        case 'bit':
+        case 'bitDepth':
+          bitDepth = t.value >= 0 ? t.value : 0;
+          // Always emit bitDepth change (including 0 for reset)
+          emit({ bitDepth }, 0);
           break;
         default:
           warnings.push(`unknown directive: ${t.key}`);

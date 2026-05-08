@@ -134,6 +134,12 @@
   gN                   vocal effort (0 lax .. 1 tense; 0.5 default)
   g+N    g-N    g      relative / reset
   [base=N] etc.        verbose form, equivalent to bN, rN, pN, sN
+  [sr=N]               effective sample rate in Hz (default: native)
+                       lower values = stepped, retro sound (aliasing intentional)
+                       values above native rate are clamped
+  [bit=N]              quantization bit depth (0=off/float, 1-16)
+                       applies before softClip for digital stair-step effect
+                       reset with [bit=0]
   [bank=NAME]          switch active phoneme bank for subsequent phonemes
   [bank]               reset active phoneme bank to the initial selection
   # rest of line       comment
