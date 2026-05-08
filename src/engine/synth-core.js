@@ -87,10 +87,10 @@ export class FormantSynth {
   // from current state to the new target
   setTarget(target, transitionMs = 30) {
     // Handle meta-parameters (no interpolation, immediate effect)
-    if ('bitDepth' in target && target.bitDepth !== undefined && target.bitDepth !== null) {
+    if ('bitDepth' in target) {
       this.bitDepth = target.bitDepth;
     }
-    if ('sampleRate' in target && target.sampleRate !== undefined && target.sampleRate !== null) {
+    if ('sampleRate' in target) {
       // Clamp to native sample rate (guard rail)
       this.effectiveSampleRate = Math.min(target.sampleRate, this.nativeSampleRate);
     }
@@ -98,7 +98,7 @@ export class FormantSynth {
     const N = Math.max(1, Math.floor(transitionMs * this.sr / 1000));
     this.transitionSamples = N;
     for (const k of PARAMS) {
-      if (k in target && target[k] !== undefined && target[k] !== null) {
+      if (k in target) {
         this.target[k] = target[k];
         this.increment[k] = (this.target[k] - this.current[k]) / N;
       }
@@ -153,15 +153,15 @@ export class FormantSynth {
         this.transitionSamples = N;
 
         // Handle meta-parameters from schedule
-        if ('bitDepth' in evt.target && evt.target.bitDepth !== undefined && evt.target.bitDepth !== null) {
+        if ('bitDepth' in evt.target) {
           this.bitDepth = evt.target.bitDepth;
         }
-        if ('sampleRate' in evt.target && evt.target.sampleRate !== undefined && evt.target.sampleRate !== null) {
+        if ('sampleRate' in evt.target) {
           this.effectiveSampleRate = Math.min(evt.target.sampleRate, this.nativeSampleRate);
         }
 
         for (const k of PARAMS) {
-          if (k in evt.target && evt.target[k] !== undefined && evt.target[k] !== null) {
+          if (k in evt.target) {
             this.target[k] = evt.target[k];
             this.increment[k] = (this.target[k] - this.current[k]) / N;
           }

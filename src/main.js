@@ -47,6 +47,10 @@ const effortSlider      = document.getElementById('effort');
 const effortVal         = document.getElementById('effortval');
 const volumeSlider      = document.getElementById('volume');
 const volumeVal         = document.getElementById('volumeval');
+const samprateSlider    = document.getElementById('samprate');
+const samprateVal       = document.getElementById('samprateval');
+const bitdepthSlider    = document.getElementById('bitdepth');
+const bitdepthVal       = document.getElementById('bitdepthval');
 const status            = document.getElementById('status');
 
 let ctx = null;
@@ -199,6 +203,8 @@ function currentDirectives() {
   const asp = Number(aspSlider.value); if (asp !== 0) parts.push(`h${asp}`);
   const tilt = Number(tiltSlider.value); if (tilt !== 0) parts.push(`t=${tilt}`);
   const eff = Number(effortSlider.value); if (eff !== 0.5) parts.push(`g${eff}`);
+  const sr = Number(samprateSlider.value); if (sr !== 48000) parts.push(`[sr=${sr}]`);
+  const bit = Number(bitdepthSlider.value); if (bit !== 0) parts.push(`[bit=${bit}]`);
   return parts.join(' ');
 }
 
@@ -227,6 +233,8 @@ function compileOpts() {
     aspiration:   Number(aspSlider.value),
     tilt:         Number(tiltSlider.value),
     effort:       Number(effortSlider.value),
+    sampleRate:   Number(samprateSlider.value) === 48000 ? null : Number(samprateSlider.value),
+    bitDepth:     Number(bitdepthSlider.value),
     bank:         selectedBank,
   };
 }
@@ -911,9 +919,18 @@ volumeSlider.addEventListener('input', () => {
   volumeVal.textContent = Number(volumeSlider.value).toFixed(2);
   if (gainNode) gainNode.gain.value = Number(volumeSlider.value);
 });
+samprateSlider.addEventListener('input', () => {
+  const sr = Number(samprateSlider.value);
+  samprateVal.textContent = sr === 48000 ? 'native' : sr;
+});
+bitdepthSlider.addEventListener('input', () => {
+  const bit = Number(bitdepthSlider.value);
+  bitdepthVal.textContent = bit === 0 ? 'off' : bit;
+});
 
 [f0Slider, durSlider, scaleSlider, vibratoSlider, vibratoRateSlider,
- tremoloSlider, tremoloRateSlider, aspSlider, tiltSlider, effortSlider]
+ tremoloSlider, tremoloRateSlider, aspSlider, tiltSlider, effortSlider,
+ samprateSlider, bitdepthSlider]
   .forEach(s => s.addEventListener('input', updateStateMirror));
 
 insertStateBtn.addEventListener('click', () => {
