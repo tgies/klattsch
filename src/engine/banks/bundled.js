@@ -780,6 +780,19 @@ export const bundled = {
         "A2": 0.15,
         "A3": 0.05
       },
+      "U": {
+        "voicing": 1,
+        "F1": 380,
+        "F2": 750,
+        "F3": 2400,
+        "BW1": 65,
+        "BW2": 110,
+        "BW3": 140,
+        "A1": 0.7,
+        "A2": 1,
+        "A3": 0.9,
+        "example": "[u]cho"
+      },
       "ENJ": {
         "voicing": 1,
         "F1": 530,
@@ -1036,7 +1049,7 @@ export const bundled = {
         "A2": 0.4,
         "A3": 0.5,
         "isStop": true,
-        "example": "[dzi]eń"
+        "example": "[dź]wig"
       },
       "CI": {
         "voicing": 0,
