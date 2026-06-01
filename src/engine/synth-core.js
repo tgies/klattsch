@@ -27,6 +27,9 @@ export const PARAMS = [
   'effort',         // 0..1 glottal pulse shape (0=lax, 1=tense)
 ];
 
+// Meta-parameters that don't interpolate and apply immediately
+export const META_PARAMS = ['bitDepth', 'sampleRate'];
+
 export const DEFAULT = {
   F0: 120, voicing: 0,
   F1: 500, BW1: 80,  A1: 0,
@@ -47,7 +50,15 @@ export class FormantSynth {
     if (!sampleRate || sampleRate <= 0) {
       throw new Error('FormantSynth requires a positive sampleRate');
     }
+    this.nativeSampleRate = sampleRate;
     this.sr = sampleRate;
+
+    // Meta-parameters for lo-fi effects
+    this.effectiveSampleRate = sampleRate;
+    this.bitDepth = 0;
+    this.resamplePhase = 0;
+    this.lastSample = 0;
+
     const init = initialTarget ?? {};
     this.current = { ...DEFAULT, ...init };
     this.target = { ...this.current };
@@ -75,11 +86,22 @@ export class FormantSynth {
   // Schedule a new target. transitionMs samples are linearly interpolated
   // from current state to the new target
   setTarget(target, transitionMs = 30) {
+    // Handle meta-parameters (no interpolation, immediate effect)
+    if ('bitDepth' in target) {
+      this.bitDepth = target.bitDepth;
+    }
+    if ('sampleRate' in target) {
+      // Clamp to native sample rate (guard rail)
+      this.effectiveSampleRate = Math.min(target.sampleRate, this.nativeSampleRate);
+    }
+
     const N = Math.max(1, Math.floor(transitionMs * this.sr / 1000));
     this.transitionSamples = N;
     for (const k of PARAMS) {
-      if (k in target) this.target[k] = target[k];
-      this.increment[k] = (this.target[k] - this.current[k]) / N;
+      if (k in target) {
+        this.target[k] = target[k];
+        this.increment[k] = (this.target[k] - this.current[k]) / N;
+      }
     }
   }
 
@@ -102,6 +124,13 @@ export class FormantSynth {
     this.bp1.reset();
     this.bp2.reset();
     this.bp3.reset();
+
+    // Reset meta-parameters to defaults
+    this.effectiveSampleRate = this.nativeSampleRate;
+    this.bitDepth = 0;
+    this.resamplePhase = 0;
+    this.lastSample = 0;
+
     const init = initialTarget ?? {};
     this.current = { ...DEFAULT, ...init };
     this.target = { ...this.current };
@@ -122,9 +151,20 @@ export class FormantSynth {
         const evt = this.schedule[this.scheduleIdx++];
         const N = evt.transitionSamples;
         this.transitionSamples = N;
+
+        // Handle meta-parameters from schedule
+        if ('bitDepth' in evt.target) {
+          this.bitDepth = evt.target.bitDepth;
+        }
+        if ('sampleRate' in evt.target) {
+          this.effectiveSampleRate = Math.min(evt.target.sampleRate, this.nativeSampleRate);
+        }
+
         for (const k of PARAMS) {
-          if (k in evt.target) this.target[k] = evt.target[k];
-          this.increment[k] = (this.target[k] - this.current[k]) / N;
+          if (k in evt.target) {
+            this.target[k] = evt.target[k];
+            this.increment[k] = (this.target[k] - this.current[k]) / N;
+          }
         }
       }
       this.sampleCounter++;
@@ -169,7 +209,29 @@ export class FormantSynth {
       const tilted = y - cur.tilt * this.tiltPrev;
       this.tiltPrev = y;
 
-      out[i] = softClip(tilted);
+      let sample = tilted;
+
+      // Apply quantization (before softClip, as specified)
+      // bitDepth = 0 means no quantization (full float precision)
+      if (this.bitDepth > 0) {
+        const levels = Math.pow(2, this.bitDepth - 1);
+        sample = Math.round(sample * levels) / levels;
+      }
+
+      // Resampling: downsample to effectiveSampleRate if lower than native
+      // Uses zero-order hold (step function) for retro stair-step effect
+      if (this.effectiveSampleRate < this.nativeSampleRate) {
+        this.resamplePhase += this.effectiveSampleRate / this.nativeSampleRate;
+        if (this.resamplePhase >= 1.0) {
+          this.lastSample = sample;
+          this.resamplePhase -= 1.0;
+        }
+        sample = this.lastSample;
+      } else {
+        this.lastSample = sample;
+      }
+
+      out[i] = softClip(sample);
     }
   }
 }
