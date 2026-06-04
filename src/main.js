@@ -259,7 +259,7 @@ async function renderWav(text) {
   const rendered = await offline.startRendering();
   const { bytes, gain } = encodeWav(rendered.getChannelData(0), sr, {
     metadata: {
-      software: 'klattsch · https://tgies.github.io/klattsch',
+      software: 'klattsch-slavistics · https://avstraliya.github.io/klattsch-slavistics/\nFollow the original at https://tgies.github.io/klattsch',
       comment: text,
     },
   });
