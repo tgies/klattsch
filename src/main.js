@@ -9,6 +9,8 @@ function loadSelectedBank() {
 }
 let selectedBank = loadSelectedBank();
 import { encodeWav } from './engine/wav.js';
+import { buildHighlight } from './highlight.js';
+import { SHOWCASE } from './showcase-data.js';
 
 const seqInput   = document.getElementById('seq');
 const speakBtn   = document.getElementById('speak');
@@ -23,7 +25,6 @@ const videoKaraokeInput = document.getElementById('video-karaoke');
 const stateMirror = document.getElementById('state-mirror');
 const stateDisplay = document.getElementById('state-display');
 const insertStateBtn = document.getElementById('insert-state');
-const playbackDisplay = document.getElementById('playback-display');
 const phonemesDiv = document.getElementById('phonemes');
 const f0Slider          = document.getElementById('f0');
 const f0Val             = document.getElementById('f0val');
@@ -54,6 +55,39 @@ let node = null;
 let gainNode = null;
 let audioInit = null;
 let videoRender = null;
+
+// Syntax-highlight backdrop behind the transparent-text textarea
+const seqHighlight = document.getElementById('seq-highlight');
+const phonemeSetCache = new Map();
+function phonemeSetFor(name) {
+  if (!phonemeSetCache.has(name)) {
+    const bank = banks.get(name);
+    phonemeSetCache.set(name, bank ? new Set(Object.keys(bank.phonemes)) : null);
+  }
+  return phonemeSetCache.get(name);
+}
+
+function syncHighlightScroll() {
+  if (!seqHighlight) return;
+  seqHighlight.scrollTop = seqInput.scrollTop;
+  seqHighlight.scrollLeft = seqInput.scrollLeft;
+}
+
+function refreshHighlight() {
+  if (!seqHighlight) return;
+  seqHighlight.replaceChildren(buildHighlight(seqInput.value, {
+    phonemesFor: phonemeSetFor,
+    initialBank: selectedBank,
+  }));
+  syncHighlightScroll();
+}
+
+if (seqHighlight) {
+  seqHighlight.parentElement.classList.add('hl-on');
+  seqInput.addEventListener('input', refreshHighlight);
+  seqInput.addEventListener('scroll', syncHighlightScroll);
+  refreshHighlight();
+}
 
 // Karaoke playback state
 // fine for now but need to revisit the textarea overlay thing
@@ -115,41 +149,64 @@ function stopPlayback() {
   }
 }
 
-function renderPlaybackDisplay() {
-  stopBtn.disabled = playback.activeIndex < 0;
-  if (!playback.source) {
-    playbackDisplay.replaceChildren();
-    return;
-  }
-  const idx = playback.activeIndex;
-  const phr = idx >= 0 ? playback.phrases[idx] : null;
-  const frag = document.createDocumentFragment();
-  if (phr) {
-    if (phr.srcStart > 0) {
-      frag.appendChild(document.createTextNode(playback.source.slice(0, phr.srcStart)));
-    }
-    // split directives from the audible token
-    const tokenStart = phr.tokenSrcStart ?? phr.srcStart;
-    if (tokenStart > phr.srcStart) {
-      const pre = document.createElement('span');
-      pre.className = 'active-pre';
-      pre.textContent = playback.source.slice(phr.srcStart, tokenStart);
-      frag.appendChild(pre);
-    }
-    const span = document.createElement('span');
-    span.className = 'active';
-    span.textContent = playback.source.slice(tokenStart, phr.srcEnd);
-    frag.appendChild(span);
-    if (phr.srcEnd < playback.source.length) {
-      frag.appendChild(document.createTextNode(playback.source.slice(phr.srcEnd)));
-    }
-    playbackDisplay.replaceChildren(frag);
-    span.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
-  } else {
-    playbackDisplay.textContent = playback.source;
+// Wrap the [start, end) range of the highlight backdrop's text in spans
+// carrying `cls`, splitting overlay nodes at the boundaries.
+function markRange(container, start, end, cls) {
+  if (end <= start) return;
+  let pos = 0;
+  for (const node of [...container.childNodes]) {
+    const text = node.textContent;
+    const nodeStart = pos;
+    const nodeEnd = pos + text.length;
+    pos = nodeEnd;
+    if (nodeEnd <= start) continue;
+    if (nodeStart >= end) break;
+    const s = Math.max(start, nodeStart) - nodeStart;
+    const e = Math.min(end, nodeEnd) - nodeStart;
+    const baseCls = node.nodeType === 1 ? node.className : '';
+    const repl = [];
+    const push = (t, marked) => {
+      if (!t) return;
+      if (!marked && !baseCls) { repl.push(document.createTextNode(t)); return; }
+      const sp = document.createElement('span');
+      sp.className = marked ? (baseCls ? `${baseCls} ${cls}` : cls) : baseCls;
+      sp.textContent = t;
+      repl.push(sp);
+    };
+    push(text.slice(0, s), false);
+    push(text.slice(s, e), true);
+    push(text.slice(e), false);
+    node.replaceWith(...repl);
   }
 }
-playback.onUpdate = renderPlaybackDisplay;
+
+// Karaoke: paint the active phrase onto the editor backdrop. Skipped when the
+// textarea no longer matches the compiled source (edited mid-playback, or
+// Unicode normalization shifted offsets).
+function renderKaraoke() {
+  stopBtn.disabled = playback.activeIndex < 0;
+  if (!seqHighlight) return;
+  refreshHighlight();
+  if (playback.activeIndex < 0) return;
+  if (playback.source !== seqInput.value) return;
+  const phr = playback.phrases[playback.activeIndex];
+  const tokenStart = phr.tokenSrcStart ?? phr.srcStart;
+  markRange(seqHighlight, phr.srcStart, tokenStart, 'ka-pre');
+  markRange(seqHighlight, tokenStart, phr.srcEnd, 'ka-active');
+
+  const mark = seqHighlight.querySelector('.ka-active') ?? seqHighlight.querySelector('.ka-pre');
+  if (mark) {
+    const top = mark.offsetTop;
+    const bottom = top + mark.offsetHeight;
+    const viewTop = seqInput.scrollTop;
+    const viewBottom = viewTop + seqInput.clientHeight;
+    if (top < viewTop + 8 || bottom > viewBottom - 8) {
+      seqInput.scrollTop = Math.max(0, top - seqInput.clientHeight / 2);
+      syncHighlightScroll();
+    }
+  }
+}
+playback.onUpdate = renderKaraoke;
 
 stopBtn.addEventListener('click', () => {
   if (node) node.port.postMessage({ type: 'reset' });
@@ -708,6 +765,7 @@ function buildBankSelect() {
     localStorage.setItem(BANK_STORAGE_KEY, selectedBank);
     buildPhonemeButtons();
     updateBankHint();
+    refreshHighlight();
   });
   updateBankHint();
 }
@@ -767,10 +825,6 @@ videoBtn.addEventListener('click', () => {
     });
 });
 
-document.addEventListener('click', (e) => {
-  if (e.target.closest('button')) seqInput.focus();
-});
-
 // Enter submits, shift-enter newline
 seqInput.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
@@ -783,8 +837,19 @@ document.querySelectorAll('button.canned').forEach(b => {
   b.addEventListener('click', () => {
     const seq = b.dataset.seq;
     seqInput.value = seq;
+    refreshHighlight();
     trySpeak(seq);
   });
+});
+
+// Syntax-help example buttons get lexer-colored labels.
+document.querySelectorAll('button.syn-ex').forEach(b => {
+  const frag = buildHighlight(b.dataset.seq, {
+    phonemesFor: phonemeSetFor,
+    initialBank: selectedBank,
+  });
+  frag.lastChild?.remove(); // drop the height-parity sentinel
+  b.replaceChildren(frag);
 });
 
 async function compressSeq(str) {
@@ -833,6 +898,7 @@ seqInput.addEventListener('input', () => {
       if (saved) seqInput.value = saved;
     } catch {}
   }
+  refreshHighlight();
 })();
 
 shareBtn.addEventListener('click', async () => {
@@ -966,3 +1032,149 @@ document.getElementById('cookie-decline')?.addEventListener('click', () => {
   setConsent(false);
   if (consentBanner) consentBanner.hidden = true;
 });
+
+// ---------- news ticker ----------
+
+const newsDetails = document.querySelector('.news-details');
+const newsTicker = document.getElementById('news-ticker');
+if (newsDetails && newsTicker) {
+  const items = [...newsDetails.querySelectorAll('.news-list li')];
+  let newsIdx = 0;
+  const showNewsItem = () => {
+    const li = items[newsIdx];
+    if (!li) return;
+    const chip = li.querySelector('.news-chip')?.cloneNode(true);
+    const body = li.querySelector('.news-body');
+    newsTicker.replaceChildren();
+    if (chip) newsTicker.appendChild(chip);
+    newsTicker.appendChild(document.createTextNode(body ? body.textContent : ''));
+  };
+  showNewsItem();
+  if (items.length > 1) {
+    setInterval(() => {
+      newsIdx = (newsIdx + 1) % items.length;
+      if (newsDetails.open) { showNewsItem(); return; }
+      newsTicker.classList.add('fade');
+      setTimeout(() => {
+        showNewsItem();
+        newsTicker.classList.remove('fade');
+      }, 250);
+    }, 5000);
+  }
+}
+
+// ---------- community showcase ----------
+
+const showcaseFeatured = document.getElementById('showcase-featured');
+const showcaseRail = document.getElementById('showcase-rail');
+
+if (showcaseFeatured && showcaseRail && SHOWCASE.length) {
+  let featuredIndex = Math.max(0, SHOWCASE.findIndex(e => e.featured));
+
+  const thumbUrl = (entry) => `https://i.ytimg.com/vi/${entry.id}/hqdefault.jpg`;
+
+  function el(tag, cls, text) {
+    const n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  function playFeatured(entry, stage) {
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${entry.id}?autoplay=1`;
+    iframe.title = entry.title;
+    iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+    iframe.allowFullscreen = true;
+    stage.replaceChildren(iframe);
+  }
+
+  function renderFeatured() {
+    const entry = SHOWCASE[featuredIndex];
+    const card = el('div', 'sc-featured-card');
+    const stage = el('div', 'sc-stage');
+
+    if (entry.type === 'youtube') {
+      const img = document.createElement('img');
+      img.src = thumbUrl(entry);
+      img.alt = '';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      const play = el('button', 'sc-play');
+      play.setAttribute('aria-label', `play: ${entry.title}`);
+      play.addEventListener('click', () => playFeatured(entry, stage));
+      stage.append(img, play);
+    } else {
+      const quote = el('div', 'sc-meta');
+      quote.appendChild(el('p', 'sc-title', entry.title));
+      stage.appendChild(quote);
+    }
+
+    const meta = el('div', 'sc-meta');
+    const text = el('div', 'sc-meta-text');
+    text.appendChild(el('p', 'sc-title', entry.title));
+    const byline = el('p', 'sc-byline', 'by ');
+    const author = document.createElement('a');
+    author.href = entry.authorUrl ?? entry.url;
+    author.target = '_blank';
+    author.rel = 'noopener';
+    author.textContent = entry.author ?? entry.source ?? entry.url;
+    byline.appendChild(author);
+    text.appendChild(byline);
+
+    const actions = el('div', 'sc-actions');
+    const shuffle = el('button', 'sc-shuffle', 'show another');
+    shuffle.addEventListener('click', () => {
+      let next;
+      do { next = Math.floor(Math.random() * SHOWCASE.length); }
+      while (SHOWCASE.length > 1 && next === featuredIndex);
+      setFeatured(next);
+    });
+    actions.appendChild(shuffle);
+    const watch = document.createElement('a');
+    watch.href = entry.type === 'youtube' ? `https://www.youtube.com/watch?v=${entry.id}` : entry.url;
+    watch.target = '_blank';
+    watch.rel = 'noopener';
+    watch.textContent = entry.type === 'youtube' ? 'watch on youtube ↗' : 'open ↗';
+    actions.appendChild(watch);
+
+    meta.append(text, actions);
+    card.append(stage, meta);
+    showcaseFeatured.replaceChildren(card);
+  }
+
+  function renderRail() {
+    const frag = document.createDocumentFragment();
+    SHOWCASE.forEach((entry, i) => {
+      const card = el('button', 'sc-card');
+      card.type = 'button';
+      card.setAttribute('aria-current', String(i === featuredIndex));
+      if (entry.type === 'youtube') {
+        const img = document.createElement('img');
+        img.src = thumbUrl(entry);
+        img.alt = '';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        card.appendChild(img);
+      }
+      const text = el('div', 'sc-card-text');
+      text.appendChild(el('p', 'sc-card-title', entry.title));
+      text.appendChild(el('p', 'sc-card-by', entry.author ?? entry.source ?? ''));
+      card.appendChild(text);
+      card.addEventListener('click', () => setFeatured(i));
+      frag.appendChild(card);
+    });
+    showcaseRail.replaceChildren(frag);
+  }
+
+  function setFeatured(i) {
+    featuredIndex = i;
+    renderFeatured();
+    for (const [j, card] of [...showcaseRail.children].entries()) {
+      card.setAttribute('aria-current', String(j === featuredIndex));
+    }
+  }
+
+  renderFeatured();
+  renderRail();
+}

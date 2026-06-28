@@ -4,7 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>klattsch - primitive formant synth</title>
-  <link rel="stylesheet" href="src/style.css?v=0.4.0">
+  <meta name="description" content="a retro formant speech synthesizer in the browser. type ARPABET phonemes, the computer talks (and sings).">
+  <meta name="theme-color" content="#141414">
+  <meta property="og:title" content="klattsch - primitive formant synth">
+  <meta property="og:description" content="a retro formant speech synthesizer in the browser. type ARPABET phonemes, the computer talks (and sings).">
+  <meta property="og:image" content="https://tgies.github.io/klattsch/assets/icon-k.png">
+  <meta property="og:url" content="https://tgies.github.io/klattsch/">
+  <link rel="icon" href="assets/icon-k.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/icon-k.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Barlow+Condensed:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="src/style.css?v=0.5.0">
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -22,39 +33,87 @@
   </script>
 </head>
 <body>
-  <div class="page-header">
-    <div class="title-block">
-      <h1>klattsch</h1>
-      <p class="subtitle">a retro formant speech synthesizer</p>
+  <div class="page">
+
+  <header class="masthead">
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="klattsch icon">
+        <defs>
+          <pattern id="k-stripes" patternUnits="userSpaceOnUse" width="24" height="24">
+            <rect width="24" height="14" fill="#ff6a00"/>
+          </pattern>
+        </defs>
+        <rect width="512" height="512" fill="#141414"/>
+        <rect x="116" y="60" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="116" y="116" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="116" y="172" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="116" y="228" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="116" y="284" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="116" y="340" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="116" y="396" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="172" y="284" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="228" y="228" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="284" y="172" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="228" y="340" width="56" height="56" fill="url(#k-stripes)"/>
+        <rect x="284" y="396" width="56" height="56" fill="url(#k-stripes)"/>
+      </svg>
+      <div class="title-block">
+        <h1 class="wordmark">klattsch</h1>
+        <p class="subtitle">a retro formant speech synthesizer</p>
+      </div>
     </div>
-  </div>
-  <p class="support">
-    <a href="https://github.com/tgies/klattsch" target="_blank" rel="noopener">source</a>
-    ·
-    <a href="https://discord.gg/9YESUYG4xC" target="_blank" rel="noopener">discord</a>
-    ·
-    <a href="mailto:tgies@tgies.net?subject=klattsch">email</a>
-    ·
-    <a href="#" id="changelog-link">changelog</a>
-    <span class="support-sep">|</span>
-    <span class="support-label">support via:</span>
-    <a href="https://github.com/sponsors/tgies" target="_blank" rel="noopener">gh sponsors</a>
-    ·
-    <a href="https://ko-fi.com/crashunited" target="_blank" rel="noopener">ko-fi</a>
-    ·
-    <a href="https://cash.app/$tgies" target="_blank" rel="noopener">cashapp</a>
-  </p>
+    <p class="support">
+      <a href="https://github.com/tgies/klattsch" target="_blank" rel="noopener">source</a>
+      ·
+      <a href="https://discord.gg/9YESUYG4xC" target="_blank" rel="noopener">discord</a>
+      ·
+      <a href="#showcase">gallery</a>
+      ·
+      <a href="mailto:tgies@tgies.net?subject=klattsch">email</a>
+      ·
+      <a href="#" id="changelog-link">changelog</a>
+      <span class="support-sep">|</span>
+      <span class="support-label">support via:</span>
+      <a href="https://github.com/sponsors/tgies" target="_blank" rel="noopener">gh sponsors</a>
+      ·
+      <a href="https://ko-fi.com/crashunited" class="support-chip" target="_blank" rel="noopener">ko-fi</a>
+      ·
+      <a href="https://cash.app/$tgies" target="_blank" rel="noopener">cashapp</a>
+    </p>
+  </header>
 
-  <section class="announce">
-    <span class="announce-label">new</span>
-    <span class="announce-body">japanese vowels are in.</span>
-    <a class="announce-cta" href="#bank-select">phoneme bank dropdown →</a>
-  </section>
-
-  <section class="announce">
-    <span class="announce-label">new</span>
-    <span class="announce-body">klattsch has a discord now.</span>
-    <a class="announce-cta" href="https://discord.gg/9YESUYG4xC" target="_blank" rel="noopener">join →</a>
+  <section class="news">
+    <details class="news-details">
+    <summary>
+      <h2 class="news-head">news</h2>
+      <span class="news-ticker" id="news-ticker"></span>
+    </summary>
+    <ul class="news-list">
+      <li>
+        <span class="news-chip">new</span>
+        <span class="news-body">klattsch is integrated into <a href="https://mikoto.studio/" target="_blank" rel="noopener">mikoto studio</a>.</span>
+      </li>
+      <li>
+        <span class="news-chip">new</span>
+        <span class="news-body">community gallery: covers and songs people made with klattsch.</span>
+        <a class="news-cta" href="#showcase">watch →</a>
+      </li>
+      <li>
+        <span class="news-chip soon">soon</span>
+        <span class="news-body"><strong>furnace tracker</strong> and <strong>openutau</strong> integrations are coming very soon.</span>
+      </li>
+      <li>
+        <span class="news-chip">new</span>
+        <span class="news-body">japanese vowels are in.</span>
+        <a class="news-cta" href="#bank-select">phoneme bank dropdown →</a>
+      </li>
+      <li>
+        <span class="news-chip">new</span>
+        <span class="news-body">klattsch has a discord now.</span>
+        <a class="news-cta" href="https://discord.gg/9YESUYG4xC" target="_blank" rel="noopener">join →</a>
+      </li>
+    </ul>
+    </details>
   </section>
 
   <aside class="thank-you">
@@ -74,12 +133,16 @@
   </script>
 
   <section id="main">
-    <fieldset>
+    <div class="main-col main-col-a">
+    <fieldset class="panel panel-editor">
       <legend>phoneme sequence</legend>
-      <textarea id="seq" rows="10" cols="80" autocomplete="off" spellcheck="false" wrap="soft">HH AH L OW</textarea>
-      <div id="playback-display" class="playback-display" aria-live="off"></div>
-      <div class="row controls-row">
-        <button id="speak">speak</button>
+      <div class="editor-shell">
+        <div id="seq-highlight" class="editor-backdrop" aria-hidden="true"></div>
+        <textarea id="seq" rows="10" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" wrap="soft">HH AH L OW</textarea>
+      </div>
+      <p class="editor-hint">enter speaks · shift+enter for a new line · <span class="hint-comment"># comments</span> · phrases light up as audio runs</p>
+      <div class="row transport-row">
+        <button id="speak" class="primary">speak</button>
         <button id="stop" disabled>stop</button>
         <button id="render">render .wav</button>
         <button id="render-video">render video</button>
@@ -93,73 +156,9 @@
         <input id="video-title" type="text" placeholder="optional" autocomplete="off" spellcheck="false">
         <label class="checkbox-label"><input id="video-karaoke" type="checkbox" checked> karaoke highlight</label>
       </div>
-      <details class="syntax">
-        <summary>syntax help</summary>
-        <pre>tokens (whitespace-separated)
-  PHONEME              ARPABET code (AY, IH, AA, S, ...)
-  PHONEME!             stressed (transient: +8 Hz lift, longer duration)
-  PHONEME+N            rising pitch glide of N Hz; new pitch sticks
-  PHONEME-N            falling pitch glide of N Hz; new pitch sticks
-  PHONEME(+N)          transient rise: ornament only, doesn't carry forward
-  PHONEME(-N)          transient fall
-  ( PHONEMES )         syllable group: phonemes share one rate slot
-  ,  ;  .              short / medium / long pause (100/200/300 ms)
-  bN     b=N           absolute base F0 in Hz (also accepts notes:
-                       bC4, bC#5, bDb3, bA-1, etc.)
-  b+N    b-N           relative base F0 (running pitch shifts by N)
-  b                    reset base F0 to the utterance's starting value
-  rN     r=N           absolute per-phoneme rate in ms
-  r+N    r-N           relative rate (positive = slower)
-  r                    reset rate to opts default
-  pN     p=N           insert exact N-ms pause
-  sN     s=N           absolute formant scale (1.0 = male baseline,
-                       1.17 = typical female, 1.3 = child)
-  s+N    s-N           relative scale shift (decimal: s+0.1, s-0.05)
-  s                    reset scale to opts default
-  vN                   vibrato depth in Hz (peak deviation; 0 = off)
-  v+N    v-N           relative depth shift
-  v                    reset vibrato depth
-  wN                   vibrato rate in Hz (LFO frequency, default 5)
-  w+N    w-N    w      relative / reset
-  mN                   tremolo depth (0..1; amplitude modulation)
-  m+N    m-N    m      relative / reset
-  nN                   tremolo rate in Hz (default 5)
-  n+N    n-N    n      relative / reset
-  hN                   breathiness / aspiration mix (0..1)
-  h+N    h-N    h      relative / reset
-  tN                   spectral tilt (-0.9 darker .. +0.9 brighter)
-  t+N    t-N    t      relative / reset
-  gN                   vocal effort (0 lax .. 1 tense; 0.5 default)
-  g+N    g-N    g      relative / reset
-  [base=N] etc.        verbose form, equivalent to bN, rN, pN, sN
-  [bank=NAME]          switch active phoneme bank for subsequent phonemes
-  [bank]               reset active phoneme bank to the initial selection
-  # rest of line       comment
-  /* ... */            block comment (can span multiple lines)
-
-f0 evolution
-  stress (!) is transient: doesn't carry forward
-  bare pitch deltas +N/-N are sticky: mutates the running pitch
-  parenthesized deltas (+N)/(-N) are transient: this phoneme only
-  bN (or bC4 etc.) is an absolute reset to that pitch
-  bare b returns to the utterance's starting pitch
-  examples:
-    "AY+20 D IH+10 D"   D at base+20, IH at base+30, D at base+30
-    "AY(+20) D IH(+10) D"  D at base, IH at base, D at base (ornaments)
-    "AY+20 D IH(+10) D" D at base+20, IH peaks at +30, D back at +20
-
-examples
-  HH AH L OW                       hello, default voice
-  b140 HH AH L OW                  higher voice
-  bA3 HH AH L OW                   higher voice (note name)
-  AY+15 D IH D                     "I did" with rise; D and IH stay raised
-  AY-15 . b120 AY+10               fall, reset, then rise
-  D IH D DH AE(+40) T              "did THAT" with accent ornament on AE
-        </pre>
-      </details>
     </fieldset>
 
-    <fieldset>
+    <fieldset class="panel panel-canned">
       <legend>canned utterances</legend>
       <div class="row">
         <button class="canned" data-seq="HH AH L OW">hello</button>
@@ -183,8 +182,90 @@ examples
         <button class="canned" title="female voice example - song by JamieP, coded by @lapis3xn" data-seq="/* Song: Machine Love by JamieP - coded by @lapis3xn on twt */ s1.55 r30 S r350 bC4 OW r10 T r10 K r200 bD4 AE r100 N r50 W r350 bD#4 v3 IY r10 W r70 bA#4 AO r50 bA#4 OW p10 r10 P r130 bC5 AE r10 R r20 F r140 bA#4 AO r40 OW r30 r150 bC5 AE r20 S P r350 v-10 bA#4 AE r30 AO L L p35 r120 bD#4 v+3 AE r30 N D r50 L r140 bA#4 IH r30 v0 m0.2 ( B V ) r80 bC5 IH r15 N B P DH r120 bA#4 AE r50 R r120 bC5 AA r20 L L r410 bA#4 v-10 AE r20 L L v0 p50 v0 r130 bD#4 AE r20 IY L W r130 bA#4 AO r20 N T r20 IY r70 bC5 IH r20 W T r30 T r120 bA#4 IH r10 W TH r15 v0 B r120 bC5 IY r30 T TH r10 R r80 bC5 IH r240 bD5 v-10 IH r15 OW W r10 D T r290 bD#5 v-10 IH r10 W r10 D B V r300 bA#4 v-2 IY r30 L L r200 bG#4 AA r30 IY r10 K DH p60 r20 K IY r160 bG4 v0 IH r140 bF4 W r20 M M r200 bD#4 AA r60 IY r30 DH HH r140 bC4 AA r35 R D T p480 r20 S S r250 IY r50 NG r10 r30 S r290 v-10 bG4 AA r20 AO HH K HH v0 r280 bF4 AO r25 OW R r280 bD#4 IH r30 S p20 r250 bD4 AA r20 OW D p30 r240 bD#4 AO r30 F V p30 r30 T T r1800 v-10 bA#4 IH r20 N">machine love ♀</button>
       </div>
     </fieldset>
+    </div>
 
-    <fieldset>
+    <div class="main-col main-col-b">
+
+    <fieldset class="panel panel-defaults">
+      <legend>defaults (commands override this)</legend>
+      <details class="defaults-body" open>
+      <summary>show sliders</summary>
+      <div class="state-mirror" id="state-mirror">
+        <button id="insert-state" type="button" title="prepend these directives to the phoneme string">insert</button>
+        <code class="state-display" id="state-display"></code>
+      </div>
+      <div class="sliders">
+        <div class="param">
+          <label for="f0">base F0 (Hz)</label>
+          <span class="param-val" id="f0val">120</span>
+          <input id="f0" type="range" min="70" max="320" value="120">
+        </div>
+        <div class="param">
+          <label for="dur">rate (ms / phoneme)</label>
+          <span class="param-val" id="durval">110</span>
+          <input id="dur" type="range" min="60" max="240" value="110">
+        </div>
+        <div class="param">
+          <label for="scale">formant scale</label>
+          <span class="param-val" id="scaleval">1.00</span>
+          <input id="scale" type="range" min="0.70" max="1.50" step="0.01" value="1.00">
+        </div>
+        <div class="param">
+          <label for="vibrato">vibrato depth (Hz)</label>
+          <span class="param-val" id="vibratoval">0</span>
+          <input id="vibrato" type="range" min="0" max="15" step="0.5" value="0">
+        </div>
+        <div class="param">
+          <label for="vibratoRate">vibrato rate (Hz)</label>
+          <span class="param-val" id="vibratoRateVal">5.0</span>
+          <input id="vibratoRate" type="range" min="2" max="10" step="0.1" value="5">
+        </div>
+        <div class="param">
+          <label for="tremolo">tremolo depth (m)</label>
+          <span class="param-val" id="tremoloval">0.00</span>
+          <input id="tremolo" type="range" min="0" max="1" step="0.01" value="0">
+        </div>
+        <div class="param">
+          <label for="tremoloRate">tremolo rate (Hz)</label>
+          <span class="param-val" id="tremoloRateVal">5.0</span>
+          <input id="tremoloRate" type="range" min="0.5" max="15" step="0.1" value="5">
+        </div>
+        <div class="param">
+          <label for="aspiration">breathiness (h)</label>
+          <span class="param-val" id="aspval">0.00</span>
+          <input id="aspiration" type="range" min="0" max="1" step="0.01" value="0">
+        </div>
+        <div class="param">
+          <label for="tilt">spectral tilt (t)</label>
+          <span class="param-val" id="tiltval">0.00</span>
+          <input id="tilt" type="range" min="-0.9" max="0.9" step="0.01" value="0">
+        </div>
+        <div class="param">
+          <label for="effort">vocal effort (g)</label>
+          <span class="param-val" id="effortval">0.50</span>
+          <input id="effort" type="range" min="0" max="1" step="0.01" value="0.5">
+        </div>
+        <div class="param">
+          <label for="volume">output volume</label>
+          <span class="param-val" id="volumeval">1.00</span>
+          <input id="volume" type="range" min="0" max="1.5" step="0.01" value="1">
+        </div>
+      </div>
+      </details>
+    </fieldset>
+    <script>
+      (function () {
+        var mq = matchMedia('(max-width: 960px)');
+        var body = document.querySelector('.defaults-body');
+        if (mq.matches) body.removeAttribute('open');
+        mq.addEventListener('change', function (e) {
+          if (!e.matches) body.setAttribute('open', '');
+        });
+      })();
+    </script>
+
+
+    <fieldset class="panel panel-audition">
       <legend>audition phonemes</legend>
       <div class="row bank-select-row">
         <label for="bank-select">phoneme bank</label>
@@ -193,60 +274,114 @@ examples
       </div>
       <div id="phonemes" class="row"></div>
     </fieldset>
+    </div>
+    <section class="syntax-section">
+      <details class="syntax">
+        <summary>syntax help</summary>
+        <div class="syntax-sheet">
+          <section class="syn-group">
+            <h4>tokens <span class="h4-note">(whitespace-separated)</span></h4>
+            <div class="syn-rows">
+              <div class="syn-row"><code><span class="hl-phoneme">PHONEME</span></code><span>ARPABET code (AY, IH, AA, S, ...)</span></div>
+              <div class="syn-row"><code><span class="hl-phoneme">PHONEME</span><span class="hl-stress">!</span></code><span>stressed (transient: +8 Hz lift, longer duration)</span></div>
+              <div class="syn-row"><code><span class="hl-phoneme">PHONEME</span><span class="hl-pitch">+N</span></code><span>rising pitch glide of N Hz; new pitch sticks</span></div>
+              <div class="syn-row"><code><span class="hl-phoneme">PHONEME</span><span class="hl-pitch">-N</span></code><span>falling pitch glide of N Hz; new pitch sticks</span></div>
+              <div class="syn-row"><code><span class="hl-phoneme">PHONEME</span><span class="hl-transient">(+N)</span></code><span>transient rise: ornament only, doesn't carry forward</span></div>
+              <div class="syn-row"><code><span class="hl-phoneme">PHONEME</span><span class="hl-transient">(-N)</span></code><span>transient fall</span></div>
+              <div class="syn-row"><code><span class="hl-paren">(</span> <span class="hl-phoneme">PHONEMES</span> <span class="hl-paren">)</span></code><span>syllable group: phonemes share one rate slot</span></div>
+              <div class="syn-row"><code><span class="hl-pause">,&nbsp;&nbsp;;&nbsp;&nbsp;.</span></code><span>short / medium / long pause (100/200/300 ms)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-pitch">b</span><span class="hl-value hl-v-pitch">N</span> <span class="hl-directive hl-d-pitch">b=</span><span class="hl-value hl-v-pitch">N</span></code><span>absolute base F0 in Hz (also accepts notes: bC4, bC#5, bDb3, bA-1, etc.)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-pitch">b</span><span class="hl-value hl-v-pitch">+N</span> <span class="hl-directive hl-d-pitch">b</span><span class="hl-value hl-v-pitch">-N</span></code><span>relative base F0 (running pitch shifts by N)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-pitch">b</span></code><span>reset base F0 to the utterance's starting value</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-time">r</span><span class="hl-value hl-v-time">N</span> <span class="hl-directive hl-d-time">r=</span><span class="hl-value hl-v-time">N</span></code><span>absolute per-phoneme rate in ms</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-time">r</span><span class="hl-value hl-v-time">+N</span> <span class="hl-directive hl-d-time">r</span><span class="hl-value hl-v-time">-N</span></code><span>relative rate (positive = slower)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-time">r</span></code><span>reset rate to opts default</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-time">p</span><span class="hl-value hl-v-time">N</span> <span class="hl-directive hl-d-time">p=</span><span class="hl-value hl-v-time">N</span></code><span>insert exact N-ms pause</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-scale">s</span><span class="hl-value hl-v-scale">N</span> <span class="hl-directive hl-d-scale">s=</span><span class="hl-value hl-v-scale">N</span></code><span>absolute formant scale (1.0 = male baseline, 1.17 = typical female, 1.3 = child)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-scale">s</span><span class="hl-value hl-v-scale">+N</span> <span class="hl-directive hl-d-scale">s</span><span class="hl-value hl-v-scale">-N</span></code><span>relative scale shift (decimal: s+0.1, s-0.05)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-scale">s</span></code><span>reset scale to opts default</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-mod">v</span><span class="hl-value hl-v-mod">N</span></code><span>vibrato depth in Hz (peak deviation; 0 = off)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-mod">v</span><span class="hl-value hl-v-mod">+N</span> <span class="hl-directive hl-d-mod">v</span><span class="hl-value hl-v-mod">-N</span></code><span>relative depth shift</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-mod">v</span></code><span>reset vibrato depth</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-mod">w</span><span class="hl-value hl-v-mod">N</span></code><span>vibrato rate in Hz (LFO frequency, default 5)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-mod">w</span><span class="hl-value hl-v-mod">+N</span> <span class="hl-directive hl-d-mod">w</span><span class="hl-value hl-v-mod">-N</span> <span class="hl-directive hl-d-mod">w</span></code><span>relative / reset</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-mod">m</span><span class="hl-value hl-v-mod">N</span></code><span>tremolo depth (0..1; amplitude modulation)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-mod">m</span><span class="hl-value hl-v-mod">+N</span> <span class="hl-directive hl-d-mod">m</span><span class="hl-value hl-v-mod">-N</span> <span class="hl-directive hl-d-mod">m</span></code><span>relative / reset</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-mod">n</span><span class="hl-value hl-v-mod">N</span></code><span>tremolo rate in Hz (default 5)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-mod">n</span><span class="hl-value hl-v-mod">+N</span> <span class="hl-directive hl-d-mod">n</span><span class="hl-value hl-v-mod">-N</span> <span class="hl-directive hl-d-mod">n</span></code><span>relative / reset</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-voice">h</span><span class="hl-value hl-v-voice">N</span></code><span>breathiness / aspiration mix (0..1)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-voice">h</span><span class="hl-value hl-v-voice">+N</span> <span class="hl-directive hl-d-voice">h</span><span class="hl-value hl-v-voice">-N</span> <span class="hl-directive hl-d-voice">h</span></code><span>relative / reset</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-voice">t</span><span class="hl-value hl-v-voice">N</span></code><span>spectral tilt (-0.9 darker .. +0.9 brighter)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-voice">t</span><span class="hl-value hl-v-voice">+N</span> <span class="hl-directive hl-d-voice">t</span><span class="hl-value hl-v-voice">-N</span> <span class="hl-directive hl-d-voice">t</span></code><span>relative / reset</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-voice">g</span><span class="hl-value hl-v-voice">N</span></code><span>vocal effort (0 lax .. 1 tense; 0.5 default)</span></div>
+              <div class="syn-row"><code><span class="hl-directive hl-d-voice">g</span><span class="hl-value hl-v-voice">+N</span> <span class="hl-directive hl-d-voice">g</span><span class="hl-value hl-v-voice">-N</span> <span class="hl-directive hl-d-voice">g</span></code><span>relative / reset</span></div>
+              <div class="syn-row"><code><span class="hl-directive">[base=</span><span class="hl-value">N</span><span class="hl-directive">]</span> etc.</code><span>verbose form, equivalent to bN, rN, pN, sN</span></div>
+              <div class="syn-row"><code><span class="hl-bank">[bank=NAME]</span></code><span>switch active phoneme bank for subsequent phonemes</span></div>
+              <div class="syn-row"><code><span class="hl-bank">[bank]</span></code><span>reset active phoneme bank to the initial selection</span></div>
+              <div class="syn-row"><code><span class="hl-comment"># rest of line</span></code><span>comment</span></div>
+              <div class="syn-row"><code><span class="hl-comment">/* ... */</span></code><span>block comment (can span multiple lines)</span></div>
+            </div>
+          </section>
 
-    <fieldset>
-      <legend>defaults (commands override this)</legend>
-      <div class="state-mirror" id="state-mirror">
-        <button id="insert-state" type="button" title="prepend these directives to the phoneme string">insert</button>
-        <code class="state-display" id="state-display"></code>
+          <section class="syn-group">
+            <h4>f0 evolution</h4>
+            <ul class="syn-bullets">
+              <li>stress (<code class="hl-stress">!</code>) is transient: doesn't carry forward</li>
+              <li>bare pitch deltas <code class="hl-pitch">+N</code>/<code class="hl-pitch">-N</code> are sticky: mutates the running pitch</li>
+              <li>parenthesized deltas <code class="hl-transient">(+N)</code>/<code class="hl-transient">(-N)</code> are transient: this phoneme only</li>
+              <li><code class="hl-directive hl-d-pitch">b</code><code class="hl-value hl-v-pitch">N</code> (or <code class="hl-directive hl-d-pitch">b</code><code class="hl-value hl-v-pitch">C4</code> etc.) is an absolute reset to that pitch</li>
+              <li>bare <code class="hl-directive hl-d-pitch">b</code> returns to the utterance's starting pitch</li>
+            </ul>
+            <div class="syn-examples">
+              <div class="syn-ex-row"><button class="canned syn-ex" data-seq="AY+20 D IH+10 D">AY+20 D IH+10 D</button><span class="syn-ex-desc">D at base+20, IH at base+30, D at base+30</span></div>
+              <div class="syn-ex-row"><button class="canned syn-ex" data-seq="AY(+20) D IH(+10) D">AY(+20) D IH(+10) D</button><span class="syn-ex-desc">D at base, IH at base, D at base (ornaments)</span></div>
+              <div class="syn-ex-row"><button class="canned syn-ex" data-seq="AY+20 D IH(+10) D">AY+20 D IH(+10) D</button><span class="syn-ex-desc">D at base+20, IH peaks at +30, D back at +20</span></div>
+            </div>
+          </section>
+
+          <section class="syn-group">
+            <h4>examples <span class="h4-note">(click to load &amp; play)</span></h4>
+            <div class="syn-examples">
+              <div class="syn-ex-row"><button class="canned syn-ex" data-seq="HH AH L OW">HH AH L OW</button><span class="syn-ex-desc">hello, default voice</span></div>
+              <div class="syn-ex-row"><button class="canned syn-ex" data-seq="b140 HH AH L OW">b140 HH AH L OW</button><span class="syn-ex-desc">higher voice</span></div>
+              <div class="syn-ex-row"><button class="canned syn-ex" data-seq="bA3 HH AH L OW">bA3 HH AH L OW</button><span class="syn-ex-desc">higher voice (note name)</span></div>
+              <div class="syn-ex-row"><button class="canned syn-ex" data-seq="AY+15 D IH D">AY+15 D IH D</button><span class="syn-ex-desc">"I did" with rise; D and IH stay raised</span></div>
+              <div class="syn-ex-row"><button class="canned syn-ex" data-seq="AY-15 . b120 AY+10">AY-15 . b120 AY+10</button><span class="syn-ex-desc">fall, reset, then rise</span></div>
+              <div class="syn-ex-row"><button class="canned syn-ex" data-seq="D IH D DH AE(+40) T">D IH D DH AE(+40) T</button><span class="syn-ex-desc">"did THAT" with accent ornament on AE</span></div>
+            </div>
+          </section>
+        </div>
+      </details>
+    </section>
+
+    <section class="showcase" id="showcase">
+      <header class="showcase-head">
+        <h2>people make things with this</h2>
+        <p class="showcase-sub">songs, covers, and other things made with klattsch from around the internet. hit <em>show another</em> or pick from the rail.</p>
+      </header>
+      <div class="showcase-body">
+        <div id="showcase-featured" class="showcase-featured"></div>
+        <div id="showcase-rail" class="showcase-rail"></div>
       </div>
-      <div class="sliders">
-        <label>base F0 (Hz)</label>
-        <input id="f0" type="range" min="70" max="320" value="120">
-        <span id="f0val">120</span>
+      <p class="showcase-cta">made something? share it with <strong>#klattsch</strong> and tag <a href="https://x.com/me_irl" target="_blank" rel="noopener">@me_irl</a>, or post it in <a href="https://discord.gg/9YESUYG4xC" target="_blank" rel="noopener">the discord</a> to get it featured here.</p>
+    </section>
 
-        <label>rate (ms / phoneme)</label>
-        <input id="dur" type="range" min="60" max="240" value="110">
-        <span id="durval">110</span>
-
-        <label>formant scale</label>
-        <input id="scale" type="range" min="0.70" max="1.50" step="0.01" value="1.00">
-        <span id="scaleval">1.00</span>
-
-        <label>vibrato depth (Hz)</label>
-        <input id="vibrato" type="range" min="0" max="15" step="0.5" value="0">
-        <span id="vibratoval">0</span>
-
-        <label>vibrato rate (Hz)</label>
-        <input id="vibratoRate" type="range" min="2" max="10" step="0.1" value="5">
-        <span id="vibratoRateVal">5.0</span>
-
-        <label>tremolo depth (m)</label>
-        <input id="tremolo" type="range" min="0" max="1" step="0.01" value="0">
-        <span id="tremoloval">0.00</span>
-
-        <label>tremolo rate (Hz)</label>
-        <input id="tremoloRate" type="range" min="0.5" max="15" step="0.1" value="5">
-        <span id="tremoloRateVal">5.0</span>
-
-        <label>breathiness (h)</label>
-        <input id="aspiration" type="range" min="0" max="1" step="0.01" value="0">
-        <span id="aspval">0.00</span>
-
-        <label>spectral tilt (t)</label>
-        <input id="tilt" type="range" min="-0.9" max="0.9" step="0.01" value="0">
-        <span id="tiltval">0.00</span>
-
-        <label>vocal effort (g)</label>
-        <input id="effort" type="range" min="0" max="1" step="0.01" value="0.5">
-        <span id="effortval">0.50</span>
-
-        <label>output volume</label>
-        <input id="volume" type="range" min="0" max="1.5" step="0.01" value="1">
-        <span id="volumeval">1.00</span>
+    <section class="support-card">
+      <div class="support-card-text">
+        <h2>support klattsch</h2>
+        <p>free, no account, no ads, made by one person. if it made you smile (or sing), a few bucks genuinely keeps the lights on over here.</p>
+        <p class="support-card-alt">can't chip in? sharing what you make with <strong>#klattsch</strong> helps almost as much.</p>
       </div>
-    </fieldset>
+      <div class="support-card-actions">
+        <a class="donate-btn donate-primary" href="https://ko-fi.com/crashunited" target="_blank" rel="noopener">ko-fi →</a>
+        <a class="donate-btn" href="https://github.com/sponsors/tgies" target="_blank" rel="noopener">gh sponsors</a>
+        <a class="donate-btn" href="https://cash.app/$tgies" target="_blank" rel="noopener">cash app</a>
+      </div>
+    </section>
   </section>
+
+
+
 
   <footer class="outro">
     <div class="outro-text">
@@ -264,12 +399,20 @@ examples
     </div>
   </footer>
 
+  </div>
+
   <dialog id="changelog-dialog" class="changelog-dialog">
     <div class="changelog-header">
       <strong>changelog</strong>
       <button type="button" class="changelog-close" aria-label="close">close</button>
     </div>
     <div class="changelog-body">
+      <h3>v0.5.0</h3>
+      <ul>
+        <li>complete UI overhaul: instrument-panel look, proper mobile layout, same controls</li>
+        <li>syntax highlighting in the editor: phonemes, directives, pitch marks, comments; unknown phonemes flagged as you type</li>
+        <li>community showcase: a gallery of things people made, different feature each visit</li>
+      </ul>
       <h3>v0.4.0</h3>
       <ul>
         <li>phoneme banks: layered tables with per-call selection and a UI dropdown above the audition row</li>
@@ -327,6 +470,6 @@ examples
     </div>
   </aside>
 
-  <script type="module" src="src/main.js?v=0.4.0"></script>
+  <script type="module" src="src/main.js?v=0.5.0"></script>
 </body>
 </html>

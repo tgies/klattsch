@@ -22,3 +22,4 @@ export { FormantSynth, PARAMS, DEFAULT, renderToBuffer } from './synth-core.js';
 export { phonemes, PHONEME_KEYS } from './phonemes.js';
 export { tokenize, compile, compileString } from './sequencer.js';
 export { encodeWav } from './wav.js';
+export { banks, registerBank, resolveBank } from './banks/index.js';
