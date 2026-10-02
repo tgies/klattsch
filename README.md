@@ -10,10 +10,11 @@ The name is a portmanteau of *Klatt* (Dennis Klatt, the formant-synth pioneer) a
 
 ## The klattsch app
 
-There is a full app built on this engine: a piano-roll editor for speech-based
-singing synthesis, with word or phoneme input, backing tracks, and WAV and video
-export. Available for Windows, macOS, Linux, and Android at
-[**klatts.ch**](https://klatts.ch/).
+The klattsch app builds on this engine with a piano-roll editor for singing,
+pitch editing, multiple voice parts, backing tracks, and WAV and video export.
+It runs offline on Windows, macOS, Linux, and Android.
+
+[klatts.ch](https://klatts.ch/) · [itch.io for desktop](https://crashunited.itch.io/klattsch) · [Google Play for Android](https://play.google.com/store/apps/details?id=com.crashunited.klattsch)
 
 ## What it does
 
